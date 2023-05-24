@@ -26,9 +26,9 @@ Widget xorScaffold(Widget widget) {
 
 Color selectColor() {
   if (appTheme.value) {
-    return xorColorDark;
+    return themeColorDark;
   } else {
-    return xorColorWhite;
+    return themeColorWhite;
   }
 }
 

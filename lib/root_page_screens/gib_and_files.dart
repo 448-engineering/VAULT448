@@ -75,7 +75,7 @@ Widget gibDiv(BuildContext context) {
 Widget horizontalDivider() {
   return Container(
     height: 1,
-    color: xorColorLight,
+    color: themeColorLight,
     margin: const EdgeInsets.fromLTRB(0, 2, 0, 5),
   );
 }

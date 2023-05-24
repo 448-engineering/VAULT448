@@ -6,6 +6,11 @@ pub extern "C" fn wire_ffi_info(port_: i64) {
     wire_ffi_info_impl(port_)
 }
 
+#[no_mangle]
+pub extern "C" fn wire_app_version(port_: i64) {
+    wire_app_version_impl(port_)
+}
+
 // Section: allocate functions
 
 // Section: related functions

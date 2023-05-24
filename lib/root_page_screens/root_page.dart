@@ -57,7 +57,7 @@ class _SizeXsState extends State<SizeXs> {
           const SizedBox(
             height: 25,
           ),
-          pageHeader(),
+          const PageHeader(),
           const SizedBox(
             height: 25,
           ),
@@ -104,7 +104,7 @@ class _SmLayoutState extends State<SmLayout> {
               const SizedBox(
                 height: 25,
               ),
-              pageHeader(),
+              const PageHeader(),
               const SizedBox(
                 height: 10,
               ),

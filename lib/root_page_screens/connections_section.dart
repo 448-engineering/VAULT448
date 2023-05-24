@@ -98,7 +98,7 @@ BoxDecoration usbDecoration = const BoxDecoration(
     bottomLeft: Radius.circular(15),
     bottomRight: Radius.circular(0),
   ),
-  color: xorColorDarker,
+  color: themeColorDarker,
 );
 
 BoxDecoration networkConnectionsDecoration = const BoxDecoration(
@@ -108,10 +108,10 @@ BoxDecoration networkConnectionsDecoration = const BoxDecoration(
     bottomLeft: Radius.circular(0),
     bottomRight: Radius.circular(15),
   ),
-  color: xorColorDarker,
+  color: themeColorDarker,
 );
 
 BoxDecoration vaultDecoration = BoxDecoration(
   borderRadius: BorderRadius.circular(15),
-  color: xorColorDarker,
+  color: themeColorDarker,
 );

@@ -14,6 +14,10 @@ abstract class Vault448Native {
   Future<String> ffiInfo({dynamic hint});
 
   FlutterRustBridgeTaskConstMeta get kFfiInfoConstMeta;
+
+  Future<String> appVersion({dynamic hint});
+
+  FlutterRustBridgeTaskConstMeta get kAppVersionConstMeta;
 }
 
 class Vault448NativeImpl implements Vault448Native {
@@ -38,6 +42,22 @@ class Vault448NativeImpl implements Vault448Native {
   FlutterRustBridgeTaskConstMeta get kFfiInfoConstMeta =>
       const FlutterRustBridgeTaskConstMeta(
         debugName: "ffi_info",
+        argNames: [],
+      );
+
+  Future<String> appVersion({dynamic hint}) {
+    return _platform.executeNormal(FlutterRustBridgeTask(
+      callFfi: (port_) => _platform.inner.wire_app_version(port_),
+      parseSuccessData: _wire2api_String,
+      constMeta: kAppVersionConstMeta,
+      argValues: [],
+      hint: hint,
+    ));
+  }
+
+  FlutterRustBridgeTaskConstMeta get kAppVersionConstMeta =>
+      const FlutterRustBridgeTaskConstMeta(
+        debugName: "app_version",
         argNames: [],
       );
 
@@ -183,6 +203,20 @@ class Vault448NativeWire implements FlutterRustBridgeWireBase {
           'wire_ffi_info');
   late final _wire_ffi_info =
       _wire_ffi_infoPtr.asFunction<void Function(int)>();
+
+  void wire_app_version(
+    int port_,
+  ) {
+    return _wire_app_version(
+      port_,
+    );
+  }
+
+  late final _wire_app_versionPtr =
+      _lookup<ffi.NativeFunction<ffi.Void Function(ffi.Int64)>>(
+          'wire_app_version');
+  late final _wire_app_version =
+      _wire_app_versionPtr.asFunction<void Function(int)>();
 
   void free_WireSyncReturn(
     WireSyncReturn ptr,

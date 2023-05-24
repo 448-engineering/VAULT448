@@ -31,6 +31,16 @@ fn wire_ffi_info_impl(port_: MessagePort) {
         move || move |task_callback| Ok(ffi_info()),
     )
 }
+fn wire_app_version_impl(port_: MessagePort) {
+    FLUTTER_RUST_BRIDGE_HANDLER.wrap(
+        WrapInfo {
+            debug_name: "app_version",
+            port: Some(port_),
+            mode: FfiCallMode::Normal,
+        },
+        move || move |task_callback| Ok(app_version()),
+    )
+}
 // Section: wrapper structs
 
 // Section: static checks

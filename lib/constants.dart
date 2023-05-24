@@ -12,11 +12,11 @@ LG - ( Screens 1200px+         wide ) - Generally Widescreen Computers
 
 */
 
-const Color xorColorDarker = Color(0xFF100C17);
-const Color xorColorDark = Color(0xFF1B1720);
-const Color xorColorLight = Color(0xFF9575e0);
-const Color xorColorLighter = Color(0xFF93A5F8);
-const Color xorColorWhite = Color(0xFFFFFFFF);
+const Color themeColorDarker = Color(0xFF100C17);
+const Color themeColorDark = Color(0xFF1B1720);
+const Color themeColorLight = Color(0xFF9575e0);
+const Color themeColorLighter = Color(0xFF93A5F8);
+const Color themeColorWhite = Color(0xFFFFFFFF);
 
 Widget devText = CustomText(textContent: "PLACEHOLDER TEXT", fontSize: 15.sp);
 
@@ -27,7 +27,7 @@ EdgeInsetsGeometry paddingL = const EdgeInsets.all(20);
 EdgeInsetsGeometry paddingXL = const EdgeInsets.all(25);
 EdgeInsetsGeometry paddingXXL = const EdgeInsets.all(30);
 
-BoxDecoration customBoxDecoration({Color color = xorColorDarker}) {
+BoxDecoration customBoxDecoration({Color color = themeColorDarker}) {
   return BoxDecoration(
     borderRadius: BorderRadius.circular(15),
     color: color,
