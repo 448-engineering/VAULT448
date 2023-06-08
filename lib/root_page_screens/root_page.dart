@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:sizer/sizer.dart';
+import 'package:responsive_sizer/responsive_sizer.dart';
 import 'package:vault448/constants.dart';
 import 'package:vault448/root_page_screens/utilities_section.dart';
 import '../blocks.dart';

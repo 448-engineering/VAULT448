@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:vault448/root_page_screens/root_page.dart';
-import 'package:sizer/sizer.dart';
+import 'package:responsive_sizer/responsive_sizer.dart';
 import 'package:device_preview/device_preview.dart';
 
 void main() {
@@ -16,7 +16,7 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return Sizer(builder: (context, orientation, deviceType) {
+    return ResponsiveSizer(builder: (context, orientation, deviceType) {
       return MaterialApp(
         title: 'VAULT448',
         initialRoute: "/",

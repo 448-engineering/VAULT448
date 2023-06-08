@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:sizer/sizer.dart';
+import 'package:responsive_sizer/responsive_sizer.dart';
 import 'package:vault448/constants.dart';
 import 'package:vault448/text.dart';
 
@@ -22,7 +22,7 @@ class _InternalStorageTotalState extends State<InternalStorageTotal> {
         children: [
           ExpansivaText(
             textContent: "INTERNAL STORAGE",
-            fontSize: 8.sp,
+            fontSize: 14.sp,
             fontWeight: FontWeight.bold,
           ),
           const SizedBox(height: 20),
