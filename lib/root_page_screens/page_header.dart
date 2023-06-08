@@ -35,7 +35,7 @@ class ApiVersion extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SafeArea(
-      child: Container(
+      child: SizedBox(
         height: 20.h,
         child: Column(
           children: [

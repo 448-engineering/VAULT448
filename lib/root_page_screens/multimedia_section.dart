@@ -7,7 +7,7 @@ import 'package:vault448/text.dart';
 double mediaIconSize = 6.w;
 
 class MediaSection extends StatefulWidget {
-  MediaSection({Key? key}) : super(key: key);
+  const MediaSection({Key? key}) : super(key: key);
 
   @override
   State<MediaSection> createState() => _MediaSectionState();
@@ -24,7 +24,7 @@ class _MediaSectionState extends State<MediaSection> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
-            Container(
+            SizedBox(
               width: size.width,
               child: ExpansivaText(
                 textContent: "7000 TOTAL",

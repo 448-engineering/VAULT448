@@ -4,7 +4,7 @@ import 'package:vault448/constants.dart';
 import 'package:vault448/text.dart';
 
 class InternalStorageTotal extends StatefulWidget {
-  InternalStorageTotal({Key? key}) : super(key: key);
+  const InternalStorageTotal({Key? key}) : super(key: key);
 
   @override
   State<InternalStorageTotal> createState() => _InternalStorageTotalState();

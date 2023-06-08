@@ -7,7 +7,7 @@ import 'package:vault448/text.dart';
 double mediaIconSize = 8.w;
 
 class UtilitiesSection extends StatelessWidget {
-  UtilitiesSection({Key? key}) : super(key: key);
+  const UtilitiesSection({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

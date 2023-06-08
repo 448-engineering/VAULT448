@@ -67,15 +67,15 @@ class _SizeXsState extends State<SizeXs> {
           ),
           Container(
             padding: paddingM,
-            child: MediaSection(),
+            child: const MediaSection(),
           ),
           Container(
             padding: paddingM,
-            child: UtilitiesSection(),
+            child: const UtilitiesSection(),
           ),
           Container(
             padding: paddingM,
-            child: Connections(),
+            child: const Connections(),
           ),
         ],
       ),
@@ -127,15 +127,15 @@ class _SmLayoutState extends State<SmLayout> {
                           children: [
                             Container(
                               padding: paddingM,
-                              child: MediaSection(),
+                              child: const MediaSection(),
                             ),
                             Container(
                               padding: paddingM,
-                              child: UtilitiesSection(),
+                              child: const UtilitiesSection(),
                             ),
                             Container(
                               padding: paddingM,
-                              child: Connections(),
+                              child: const Connections(),
                             ),
                           ],
                         ),
@@ -158,7 +158,7 @@ class StorageOccupied extends StatefulWidget {
 class _StorageOccupiedState extends State<StorageOccupied> {
   @override
   Widget build(BuildContext context) {
-    return Row(
+    return const Row(
       mainAxisAlignment: MainAxisAlignment.spaceAround,
       children: [
         Expanded(flex: 7, child: InternalStorageTotal()),

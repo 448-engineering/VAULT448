@@ -4,7 +4,7 @@ import 'package:vault448/constants.dart';
 import 'package:vault448/text.dart';
 
 class InternalStorageGibFiles extends StatefulWidget {
-  InternalStorageGibFiles({Key? key}) : super(key: key);
+  const InternalStorageGibFiles({Key? key}) : super(key: key);
 
   @override
   State<InternalStorageGibFiles> createState() =>
@@ -14,14 +14,14 @@ class InternalStorageGibFiles extends StatefulWidget {
 class _InternalStorageGibFilesState extends State<InternalStorageGibFiles> {
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [InternalTotalGiB(), const SizedBox(height: 10), TotalFiles()],
+    return const Column(
+      children: [InternalTotalGiB(), SizedBox(height: 10), TotalFiles()],
     );
   }
 }
 
 class InternalTotalGiB extends StatefulWidget {
-  InternalTotalGiB({Key? key}) : super(key: key);
+  const InternalTotalGiB({Key? key}) : super(key: key);
 
   @override
   State<InternalTotalGiB> createState() => _InternalTotalGiBState();
@@ -48,7 +48,7 @@ class _InternalTotalGiBState extends State<InternalTotalGiB> {
 
 Widget gibDiv(BuildContext context) {
   return LayoutBuilder(builder: (ctx, constraints) {
-    return Container(
+    return SizedBox(
       width: constraints.maxWidth,
       child: Column(
         children: [
@@ -57,7 +57,7 @@ Widget gibDiv(BuildContext context) {
             fontSize: 8.sp,
           ),
           LayoutBuilder(builder: (ctx, constraints) {
-            return Container(
+            return SizedBox(
               width: constraints.maxWidth * 0.6,
               child: horizontalDivider(),
             );
@@ -81,7 +81,7 @@ Widget horizontalDivider() {
 }
 
 class TotalFiles extends StatefulWidget {
-  TotalFiles({Key? key}) : super(key: key);
+  const TotalFiles({Key? key}) : super(key: key);
 
   @override
   State<TotalFiles> createState() => TotalFilesState();
@@ -108,7 +108,7 @@ class TotalFilesState extends State<TotalFiles> {
 
 Widget totalFilesDiv(BuildContext context) {
   return LayoutBuilder(builder: (ctx, constraints) {
-    return Container(
+    return SizedBox(
       width: constraints.maxWidth,
       child: Column(
         children: [

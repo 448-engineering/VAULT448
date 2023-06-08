@@ -8,7 +8,7 @@ double mediaIconSize = 8.w;
 double mediaFontSize = 8.sp;
 
 class Connections extends StatelessWidget {
-  Connections({Key? key}) : super(key: key);
+  const Connections({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
