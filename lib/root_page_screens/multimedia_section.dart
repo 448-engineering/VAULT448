@@ -22,13 +22,14 @@ class _MediaSectionState extends State<MediaSection> {
         decoration: customBoxDecoration(),
         padding: paddingM,
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
+          mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            SizedBox(
+            Container(
+              alignment: Alignment.center,
               width: size.width,
               child: ExpansivaText(
-                textContent: "7000 TOTAL",
-                fontSize: 12.sp,
+                textContent: "MEDIA",
+                fontSize: label14sp,
               ),
             ),
             const SizedBox(
@@ -37,13 +38,6 @@ class _MediaSectionState extends State<MediaSection> {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
-                Expanded(
-                  flex: 1,
-                  child: MediaColumn(
-                      textContent: "Apps",
-                      icon: androidIcon(mediaIconSize),
-                      count: 20),
-                ),
                 Expanded(
                   flex: 1,
                   child: MediaColumn(
@@ -70,7 +64,7 @@ class _MediaSectionState extends State<MediaSection> {
                   child: MediaColumn(
                       textContent: "Documents",
                       icon: documentsIcon(mediaIconSize),
-                      count: 293),
+                      count: 2909873),
                 ),
               ],
             ),
@@ -93,22 +87,33 @@ class MediaColumn extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      crossAxisAlignment: CrossAxisAlignment.center,
-      children: [
-        icon,
-        const SizedBox(height: 10),
-        ExpansivaText(
-          textContent: "$count",
-          fontSize: 6.5.sp,
-        ),
-        const SizedBox(height: 5),
-        CustomText(
-          textContent: textContent,
-          fontSize: 8.sp,
-        ),
-      ],
-    );
+    return FutureBuilder(
+        future: numConverter(count),
+        builder: (context, snapshot) {
+          return Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              icon,
+              const SizedBox(height: 10),
+              if (snapshot.hasData)
+                countFormatted(snapshot.data as String)
+              else
+                countFormatted("..."),
+              const SizedBox(height: 5),
+              CustomText(
+                textContent: textContent,
+                fontSize: label12sp,
+              ),
+            ],
+          );
+        });
   }
+}
+
+Widget countFormatted(String textContent) {
+  return ExpansivaText(
+    textContent: textContent,
+    fontSize: label14sp,
+  );
 }

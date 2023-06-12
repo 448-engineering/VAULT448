@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:responsive_sizer/responsive_sizer.dart';
+//import 'package:responsive_sizer/responsive_sizer.dart';
 import 'package:vault448/constants.dart';
 import 'package:vault448/text.dart';
 
@@ -46,26 +46,27 @@ class _InternalTotalGiBState extends State<InternalTotalGiB> {
   }
 }
 
+Widget labelText(String textContent) {
+  return ExpansivaText(
+    textContent: textContent,
+    fontSize: label12sp,
+  );
+}
+
 Widget gibDiv(BuildContext context) {
   return LayoutBuilder(builder: (ctx, constraints) {
     return SizedBox(
       width: constraints.maxWidth,
       child: Column(
         children: [
-          ExpansivaText(
-            textContent: "40 GiB",
-            fontSize: 8.sp,
-          ),
+          labelText("40 GiB"),
           LayoutBuilder(builder: (ctx, constraints) {
             return SizedBox(
               width: constraints.maxWidth * 0.6,
               child: horizontalDivider(),
             );
           }),
-          ExpansivaText(
-            textContent: "256 GiB",
-            fontSize: 8.sp,
-          ),
+          labelText("256 GiB")
         ],
       ),
     );
@@ -112,16 +113,27 @@ Widget totalFilesDiv(BuildContext context) {
       width: constraints.maxWidth,
       child: Column(
         children: [
-          ExpansivaText(
-            textContent: "8,400",
-            fontSize: 10.sp,
-          ),
+          FutureBuilder(
+              future: numConverter(10000000),
+              builder: (context, snapshot) {
+                if (snapshot.hasData) {
+                  return ExpansivaText(
+                    textContent: snapshot.data as String,
+                    fontSize: label16sp,
+                  );
+                } else {
+                  return ExpansivaText(
+                    textContent: "CALCULATING...",
+                    fontSize: label16sp,
+                  );
+                }
+              }),
           const SizedBox(
             height: 8,
           ),
           ExpansivaText(
             textContent: "FILES",
-            fontSize: 6.sp,
+            fontSize: label12sp,
           ),
         ],
       ),

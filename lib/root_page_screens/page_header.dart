@@ -1,31 +1,32 @@
 import 'package:flutter/material.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
-import 'package:responsive_sizer/responsive_sizer.dart';
 import 'package:vault448/constants.dart';
 import 'package:vault448/text.dart';
 import '../native_loader.dart';
+import 'package:responsive_sizer/responsive_sizer.dart';
 
 class PageHeader extends StatelessWidget {
   const PageHeader({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      alignment: Alignment.center,
-      child: GestureDetector(
-          onTap: () {
-            showMaterialModalBottomSheet(
-              backgroundColor: themeColorDark,
-              context: context,
-              builder: (context) => const ApiVersion(),
-            );
-          },
+    return GestureDetector(
+        onTap: () {
+          showMaterialModalBottomSheet(
+            backgroundColor: themeColorDark,
+            context: context,
+            builder: (context) => const ApiVersion(),
+          );
+        },
+        child: Container(
+          width: 100.w,
+          alignment: Alignment.center,
           child: ExpansivaText(
             textContent: "FILE MANAGER",
-            fontSize: 12.sp,
+            fontSize: label16sp,
             fontWeight: FontWeight.bold,
-          )),
-    );
+          ),
+        ));
   }
 }
 
@@ -48,7 +49,7 @@ class ApiVersion extends StatelessWidget {
                   width: 2.w,
                 ),
                 LogoText(
-                  fontSize: 20,
+                  fontSize: label20sp,
                 ),
               ],
             ),
@@ -85,7 +86,7 @@ class ApiVersion extends StatelessWidget {
   Widget computeText(String textContent) {
     return CustomText(
       textContent: textContent,
-      fontSize: 10.sp,
+      fontSize: label16sp,
     );
   }
 

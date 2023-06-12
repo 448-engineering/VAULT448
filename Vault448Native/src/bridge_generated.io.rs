@@ -11,6 +11,11 @@ pub extern "C" fn wire_app_version(port_: i64) {
     wire_app_version_impl(port_)
 }
 
+#[no_mangle]
+pub extern "C" fn wire_num_format(port_: i64, value: u64) {
+    wire_num_format_impl(port_, value)
+}
+
 // Section: allocate functions
 
 // Section: related functions

@@ -22,7 +22,7 @@ class _InternalStorageTotalState extends State<InternalStorageTotal> {
         children: [
           ExpansivaText(
             textContent: "INTERNAL STORAGE",
-            fontSize: 14.sp,
+            fontSize: label14sp,
             fontWeight: FontWeight.bold,
           ),
           const SizedBox(height: 20),
@@ -32,7 +32,7 @@ class _InternalStorageTotalState extends State<InternalStorageTotal> {
           const SizedBox(height: 10),
           CustomText(
             textContent: "/storage/emulated/0",
-            fontSize: 8.sp,
+            fontSize: label14sp,
           )
         ],
       ),
@@ -43,6 +43,6 @@ class _InternalStorageTotalState extends State<InternalStorageTotal> {
 Widget percentageStorage() {
   return ExpansivaText(
     textContent: "47%",
-    fontSize: 30.sp,
+    fontSize: 25.sp,
   );
 }

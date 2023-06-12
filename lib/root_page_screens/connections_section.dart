@@ -4,8 +4,7 @@ import 'package:vault448/constants.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 import 'package:vault448/text.dart';
 
-double mediaIconSize = 8.w;
-double mediaFontSize = 8.sp;
+double mediaIconSize = 10.w;
 
 class Connections extends StatelessWidget {
   const Connections({Key? key}) : super(key: key);
@@ -72,12 +71,12 @@ class _ConnectionColumnState extends State<ConnectionColumn> {
           mediaSizedBox(),
           ExpansivaText(
             textContent: "${widget.count}",
-            fontSize: mediaFontSize,
+            fontSize: label16sp,
           ),
           mediaSizedBox(),
           ExpansivaText(
             textContent: widget.connectionType,
-            fontSize: mediaFontSize,
+            fontSize: label12sp,
           ),
         ],
       ),

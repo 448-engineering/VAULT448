@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 import 'package:vault448/text.dart';
+import '../native_loader.dart';
 
 /*
 
@@ -18,6 +19,14 @@ const Color themeColorLight = Color(0xFF9575e0);
 const Color themeColorLighter = Color(0xFF93A5F8);
 const Color themeColorWhite = Color(0xFFFFFFFF);
 
+double label20sp = 20.sp;
+double label18sp = 18.sp;
+double label16sp = 16.sp;
+double label14sp = 14.sp;
+double label12sp = 12.sp;
+double label10sp = 10.sp;
+double label8sp = 8.sp;
+
 Widget devText = CustomText(textContent: "PLACEHOLDER TEXT", fontSize: 15.sp);
 
 EdgeInsetsGeometry paddingXS = const EdgeInsets.all(5);
@@ -26,6 +35,12 @@ EdgeInsetsGeometry paddingM = const EdgeInsets.all(15);
 EdgeInsetsGeometry paddingL = const EdgeInsets.all(20);
 EdgeInsetsGeometry paddingXL = const EdgeInsets.all(25);
 EdgeInsetsGeometry paddingXXL = const EdgeInsets.all(30);
+
+Future<String> numConverter(int value) async {
+  String convertedValue = await api.numFormat(value: value);
+
+  return convertedValue;
+}
 
 BoxDecoration customBoxDecoration({Color color = themeColorDarker}) {
   return BoxDecoration(

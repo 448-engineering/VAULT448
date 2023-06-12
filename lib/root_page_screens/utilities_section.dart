@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:vault448/constants.dart';
-import 'package:responsive_sizer/responsive_sizer.dart';
 import 'package:vault448/text.dart';
+import 'package:responsive_sizer/responsive_sizer.dart';
 
-double mediaIconSize = 8.w;
+double mediaIconSize = 6.w;
 
 class UtilitiesSection extends StatelessWidget {
   const UtilitiesSection({Key? key}) : super(key: key);
@@ -17,19 +17,19 @@ class UtilitiesSection extends StatelessWidget {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: [
-            UtiltiyColumn(
-              mediaIcon: settingsIcon(mediaIconSize),
-              textContent: "Settings",
+            UtilityColumn(
+              mediaIcon: androidIcon(mediaIconSize),
+              textContent: "Apps",
             ),
-            UtiltiyColumn(
+            UtilityColumn(
               mediaIcon: trashIcon(mediaIconSize),
               textContent: "Trash",
             ),
-            UtiltiyColumn(
+            UtilityColumn(
               mediaIcon: downloadsIcon(mediaIconSize),
               textContent: "Downloads",
             ),
-            UtiltiyColumn(
+            UtilityColumn(
               mediaIcon: extrasIcon(mediaIconSize),
               textContent: "Extras",
             )
@@ -38,18 +38,18 @@ class UtilitiesSection extends StatelessWidget {
   }
 }
 
-class UtiltiyColumn extends StatefulWidget {
-  UtiltiyColumn({Key? key, required this.textContent, required this.mediaIcon})
+class UtilityColumn extends StatefulWidget {
+  UtilityColumn({Key? key, required this.textContent, required this.mediaIcon})
       : super(key: key);
 
   String textContent;
   SvgPicture mediaIcon;
 
   @override
-  State<UtiltiyColumn> createState() => _UtiltiyColumnState();
+  State<UtilityColumn> createState() => _UtilityColumnState();
 }
 
-class _UtiltiyColumnState extends State<UtiltiyColumn> {
+class _UtilityColumnState extends State<UtilityColumn> {
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -60,7 +60,7 @@ class _UtiltiyColumnState extends State<UtiltiyColumn> {
         ),
         CustomText(
           textContent: widget.textContent,
-          fontSize: 8.sp,
+          fontSize: label12sp,
         )
       ],
     );

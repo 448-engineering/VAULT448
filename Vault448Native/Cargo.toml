@@ -14,5 +14,6 @@ name = "vault448_native"
 crate-type = ["cdylib", "staticlib"]
 
 [dependencies]
-flutter_rust_bridge = { version = "1.75.3", default-features = false }
+flutter_rust_bridge = { version = "1.77.1", default-features = false }
+human_format = "1.0.3"
 yaml-rust = "0.4.5"
