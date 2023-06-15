@@ -65,18 +65,32 @@ class _ConnectionColumnState extends State<ConnectionColumn> {
     return Container(
       decoration: widget.decoration,
       padding: paddingM,
+      alignment: Alignment.center,
       child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           widget.mediaIcon,
           mediaSizedBox(),
-          ExpansivaText(
-            textContent: "${widget.count}",
-            fontSize: label16sp,
-          ),
+          FutureBuilder(
+              future: numConverter(widget.count),
+              builder: (context, snapshot) {
+                if (snapshot.hasData) {
+                  return ExpansivaText(
+                    textContent: snapshot.data as String,
+                    fontSize: label16sp,
+                  );
+                } else {
+                  return ExpansivaText(
+                    textContent: "...",
+                    fontSize: label14sp,
+                  );
+                }
+              }),
           mediaSizedBox(),
           ExpansivaText(
             textContent: widget.connectionType,
-            fontSize: label12sp,
+            fontSize: label14sp,
           ),
         ],
       ),
