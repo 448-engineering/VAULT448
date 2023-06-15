@@ -30,6 +30,7 @@ dependencies:
   storage_space: ^1.0.1+5
   modal_bottom_sheet: ^3.0.0-pre
   responsive_sizer: ^3.1.1
+  permission_handler: ^10.3.0
 
 dev_dependencies:
   flutter_test:

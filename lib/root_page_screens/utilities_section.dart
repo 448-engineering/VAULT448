@@ -60,7 +60,7 @@ class _UtilityColumnState extends State<UtilityColumn> {
         ),
         CustomText(
           textContent: widget.textContent,
-          fontSize: label12sp,
+          fontSize: label14sp,
         )
       ],
     );

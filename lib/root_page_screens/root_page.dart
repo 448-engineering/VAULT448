@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 import 'package:vault448/constants.dart';
 import 'package:vault448/root_page_screens/utilities_section.dart';
@@ -18,9 +19,28 @@ class RootPage extends StatefulWidget {
 
 class _RootPageState extends State<RootPage> {
   @override
-  Widget build(BuildContext context) {
-    Size size = MediaQuery.of(context).size;
+  void initState() {
+    requestPermission();
+    super.initState();
+  }
 
+  void requestPermission() async {
+    var status = await Permission.storage.status;
+
+    if (!status.isGranted) {
+      await Permission.storage.request();
+    }
+
+    var externalStoragePermission =
+        await Permission.manageExternalStorage.status;
+
+    if (!externalStoragePermission.isGranted) {
+      await Permission.manageExternalStorage.request();
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
     return xorScaffold(LayoutBuilder(builder: (context, constraints) {
       if (constraints.maxWidth <= 767) {
         return const SizeXs();

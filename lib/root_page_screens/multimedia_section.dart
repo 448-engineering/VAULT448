@@ -50,14 +50,14 @@ class _MediaSectionState extends State<MediaSection> {
                   child: MediaColumn(
                       textContent: "Videos",
                       icon: videosIcon(mediaIconSize),
-                      count: 40),
+                      count: 400),
                 ),
                 Expanded(
                   flex: 1,
                   child: MediaColumn(
                       textContent: "Music",
                       icon: musicIcon(mediaIconSize),
-                      count: 6000),
+                      count: 600),
                 ),
                 Expanded(
                   flex: 1,
@@ -103,7 +103,7 @@ class MediaColumn extends StatelessWidget {
               const SizedBox(height: 5),
               CustomText(
                 textContent: textContent,
-                fontSize: label12sp,
+                fontSize: label14sp,
               ),
             ],
           );
@@ -114,6 +114,6 @@ class MediaColumn extends StatelessWidget {
 Widget countFormatted(String textContent) {
   return ExpansivaText(
     textContent: textContent,
-    fontSize: label14sp,
+    fontSize: label16sp,
   );
 }
