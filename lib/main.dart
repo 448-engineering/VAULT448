@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:vault448/root_page_screens/root_page.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 import 'package:device_preview/device_preview.dart';
-import 'package:flutter/rendering.dart';
 
 void main() {
   //debugPaintSizeEnabled = true;
