@@ -1,6 +1,7 @@
 package engineering448.vault448
 
 import android.content.pm.PackageManager
+import android.os.Build
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -14,12 +15,14 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.core.content.ContextCompat
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
+import engineering448.vault448.screens.CheckPermissions
 import engineering448.vault448.ui.theme.VAULT448Theme
 
 var bar = Vault448Native()
 
 class MainActivity : ComponentActivity() {
 
+    @androidx.annotation.RequiresApi(Build.VERSION_CODES.R)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -31,7 +34,8 @@ class MainActivity : ComponentActivity() {
                     color = MaterialTheme.colorScheme.background
                 ) {
                     //var foo = bar.sillyString()
-                    RootUI()
+                    //RootUI()
+                    CheckPermissions()
                 }
             }
         }
