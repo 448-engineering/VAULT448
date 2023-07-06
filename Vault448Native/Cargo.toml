@@ -1,19 +1,15 @@
 [package]
 name = "vault448-native"
-authors = ["448 ENGINEERING DESIGN DEVELOPERS <superuser@448.africa>"]
 version = "0.2.0-alpha1"
-edition = "2021"
+authors = ["448 ENGINEERING Developers <superuser@448.africa>"]
 license = "LicenseRef-BSL-1.1"
-description = "Simple Secure Beautiful File Manager."
+description = "Native code for Vault448 File Manager"
 publish = false
-
-# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+edition = "2021"
 
 [lib]
 name = "vault448_native"
-crate-type = ["cdylib", "staticlib"]
+crate-type = ["cdylib"]
 
 [dependencies]
-flutter_rust_bridge = { version = "1.77.1", default-features = false }
-human_format = "1.0.3"
-yaml-rust = "0.4.5"
+jni = { version = "0.21.1", features = ["invocation"] }

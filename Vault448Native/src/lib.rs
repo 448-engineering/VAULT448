@@ -1,7 +1,17 @@
-mod bridge_generated; /* AUTO INJECTED BY flutter_rust_bridge. This line may not be accurate, and you can change it according to your needs. */
+use jni::{
+    objects::{JClass, JString,},
+    sys::{jstring},
+    JNIEnv,
+};
 
-mod api;
-pub use api::*;
+#[allow(non_snake_case)]
+#[no_mangle]
+pub extern "system" fn Java_engineering448_vault448_Vault448Native_sillyString<'local>(
+    env: JNIEnv<'local>,
+    _java_class: JClass<'local>,
+    _input: JString<'local>,
+)-> jstring {
+     let output = env.new_string("RustyHellow").unwrap();
 
-mod app_info;
-pub use app_info::*;
+     output.into_raw()
+}
