@@ -9,6 +9,7 @@ import './gib_and_files.dart';
 import './page_header.dart';
 import 'connections_section.dart';
 import 'multimedia_section.dart';
+import '../native_loader.dart';
 
 class RootPage extends StatefulWidget {
   const RootPage({Key? key}) : super(key: key);
@@ -21,7 +22,18 @@ class _RootPageState extends State<RootPage> {
   @override
   void initState() {
     requestPermission();
+    listFiles();
     super.initState();
+  }
+
+  Future<void> listFiles() async {
+    List<String> files = await api.listFiles();
+
+    print("FILE PATH ${files.length}");
+
+    for (var file in files) {
+      print("FILE PATH $file");
+    }
   }
 
   void requestPermission() async {
