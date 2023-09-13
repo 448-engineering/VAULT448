@@ -1,6 +1,8 @@
 package e448.productivity.vault448
 
+import android.content.Context
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Build
 import android.os.Environment
@@ -15,9 +17,37 @@ import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Button
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.MutableState
+import androidx.compose.ui.Modifier
+import androidx.core.content.ContextCompat
+
+
+
+
+@Composable
+fun CheckPermissionsAndroidPreR(context: Context) {
+    if (ContextCompat.checkSelfPermission(
+            context, android.Manifest.permission.MANAGE_EXTERNAL_STORAGE
+        ) == PackageManager.PERMISSION_DENIED || ContextCompat.checkSelfPermission(
+            context, android.Manifest.permission.READ_EXTERNAL_STORAGE
+        ) == PackageManager.PERMISSION_DENIED || ContextCompat.checkSelfPermission(
+            context, android.Manifest.permission.WRITE_EXTERNAL_STORAGE
+        ) == PackageManager.PERMISSION_DENIED
+    ) {
+
+    }
+}
+
+@Composable
+fun RequestPermission_vR() {
+
+}
 
 @OptIn(ExperimentalPermissionsApi::class)
 @Composable

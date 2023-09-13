@@ -14,6 +14,7 @@ import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.sp
 import e448.productivity.vault448.R
 import e448.productivity.vault448.padding14
@@ -65,11 +66,12 @@ fun ExpansivaText(
     textContent: String,
     modifier: Modifier = Modifier,
     textAlign: TextAlign = TextAlign.Center,
-    fontWeight: FontWeight = FontWeight.Bold
+    fontWeight: FontWeight = FontWeight.Bold,
+    fontSize: TextUnit = 16.sp
 ) {
 
     Text(
         textContent, textAlign = textAlign, fontFamily = expansivaFont, modifier = modifier,
-        fontWeight = fontWeight
+        fontWeight = fontWeight, fontSize = fontSize
     )
 }

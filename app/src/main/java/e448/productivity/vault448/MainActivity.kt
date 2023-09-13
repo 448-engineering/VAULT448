@@ -60,12 +60,9 @@ fun IsStorageManager(isStorageManagerListener: MutableState<Boolean>) {
                 .fillMaxSize()
                 .padding(padding)
         ) {
-            @RequiresApi(Build.VERSION_CODES.R) if (SDK_INT >= Build.VERSION_CODES.R) {
+            @RequiresApi(Build.VERSION_CODES.R) if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
                 if (isStorageManagerListener.value) {
-                    Text(text = "ALREADY SET AS MANAGER")
-                    Greeting(Build.VERSION.RELEASE)
-
-
+                    RootUI()
                 } else {
                     RequestExternalStorageDirPermission(isStorageManagerListener)
 
@@ -77,37 +74,3 @@ fun IsStorageManager(isStorageManagerListener: MutableState<Boolean>) {
     }
 }
 
-
-@Composable
-fun CheckPermissionsAndroidPreR(context: Context) {
-    if (ContextCompat.checkSelfPermission(
-            context, android.Manifest.permission.MANAGE_EXTERNAL_STORAGE
-        ) == PackageManager.PERMISSION_DENIED || ContextCompat.checkSelfPermission(
-            context, android.Manifest.permission.READ_EXTERNAL_STORAGE
-        ) == PackageManager.PERMISSION_DENIED || ContextCompat.checkSelfPermission(
-            context, android.Manifest.permission.WRITE_EXTERNAL_STORAGE
-        ) == PackageManager.PERMISSION_DENIED
-    ) {
-
-    }
-}
-
-@Composable
-fun RequestPermission_vR() {
-
-}
-
-@Composable
-fun Greeting(name: String, modifier: Modifier = Modifier) {
-    Text(
-        text = "Hello $name!", modifier = modifier
-    )
-}
-
-@Preview(showBackground = true)
-@Composable
-fun GreetingPreview() {
-    VAULT448Theme {
-        Greeting("Android")
-    }
-}
