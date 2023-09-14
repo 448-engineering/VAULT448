@@ -55,7 +55,11 @@ fun RootUI() {
         DataSection()
         ActionsSection()
 
-
+        // Calculator as in vault and can parse speech
+        // Notes
+        // Converter like insect
+        // SMS
+        // Peek -> Can display one or a few protected docs with timer
     }
 }
 
@@ -195,7 +199,7 @@ fun MediaSection() {
         MediaSectionChild(
             icon = R.drawable.electric_guitar,
             mediaIdentifier = "Music",
-            mediaCount = "1,000,000+",
+            mediaCount = "1,000+",
             modifier = Modifier.weight(1f)
         )
         MediaSectionChild(
@@ -213,7 +217,6 @@ fun DataSection() {
     CenteredRow(modifier = Modifier.padding(padding14)) {
         Box(
             modifier = Modifier
-                .padding(padding8)
                 .background(
                     themeColorDarker, shape = RoundedCornerShape(
                         padding20
@@ -222,11 +225,13 @@ fun DataSection() {
                 .weight(1.2f),
             contentAlignment = Alignment.Center
         ) {
-            CenteredRow() {
+            CenteredRow(
+                modifier = Modifier
+                    .padding(padding10)
+            ) {
                 DataSectionChild(
                     modifier = Modifier
-                        .weight(1f)
-                        .padding(padding6),
+                        .weight(1f),
                     icon = R.drawable.trash,
                     mediaIdentifier = "Trash"
                 )
@@ -248,7 +253,7 @@ fun DataSection() {
 
         Box(
             modifier = Modifier
-                .padding(padding4)
+                .padding(padding10)
                 .background(
                     themeColorDarker, shape = RoundedCornerShape(
                         padding20
@@ -258,19 +263,17 @@ fun DataSection() {
             contentAlignment = Alignment.Center
         ) {
             CenteredRow() {
-                CenteredRow() {
-                    DataSectionChildNoDescription(
-                        modifier = Modifier.weight(1f),
-                        icon = R.drawable.favourites,
-                        mediaIdentifier = "Favourite"
-                    )
+                DataSectionChildNoDescription(
+                    modifier = Modifier.weight(1f),
+                    icon = R.drawable.favourites,
+                    mediaIdentifier = "Favourite"
+                )
 
-                    DataSectionChildNoDescription(
-                        modifier = Modifier.weight(1f),
-                        icon = R.drawable.download,
-                        mediaIdentifier = "Downloads"
-                    )
-                }
+                DataSectionChildNoDescription(
+                    modifier = Modifier.weight(1f),
+                    icon = R.drawable.download,
+                    mediaIdentifier = "Downloads"
+                )
             }
         }
 
@@ -290,10 +293,10 @@ fun MediaSectionChild(
             .padding(padding4)
             .aspectRatio(1f)
             .background(
-            themeColorDarker, shape = RoundedCornerShape(
-                20.dp
-            )
-        ),
+                themeColorDarker, shape = RoundedCornerShape(
+                    20.dp
+                )
+            ),
         contentAlignment = Alignment.Center
     ) {
         CenteredColumn(modifier = Modifier.padding(padding8)) {
@@ -322,14 +325,13 @@ fun DataSectionChild(
             Image(
                 painter = painterResource(id = icon),
                 contentDescription = "$mediaIdentifier icon",
-                modifier = Modifier.fillMaxWidth(0.8f)
+                modifier = Modifier.fillMaxWidth(0.4f)
             )
             CustomSpacer(bottom = 5.dp)
             Text(text = mediaIdentifier, fontSize = 12.sp)
         }
     }
 }
-
 
 
 @Composable
