@@ -3,11 +3,14 @@ package e448.productivity.vault448
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Divider
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -16,6 +19,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
@@ -29,7 +33,7 @@ import e448.productivity.vault448.ui.theme.themeColorLight
 
 @Composable
 fun RootUI() {
-    CenteredColumn {
+    CenteredColumn() {
         FullRowCenteredTextLarge(
             "FILE  MANAGER"
         )
@@ -46,6 +50,12 @@ fun RootUI() {
             }
 
         }
+
+        MediaSection()
+        DataSection()
+        ActionsSection()
+
+
     }
 }
 
@@ -85,8 +95,7 @@ fun InternalStorageOverview(modifier: Modifier = Modifier) {
 @Composable
 fun InternalStorageCalc(
     modifier: Modifier = Modifier,
-
-    ) {
+) {
     val gibTextSize = 10.sp;
 
     Column(
@@ -165,6 +174,196 @@ fun FilesCalc(
             }
         }
 
+    }
+}
+
+@Composable
+fun MediaSection() {
+    CenteredRow(modifier = Modifier.padding(padding14)) {
+        MediaSectionChild(
+            icon = R.drawable.photos,
+            mediaIdentifier = "Photos",
+            mediaCount = "20",
+            modifier = Modifier.weight(1f)
+        )
+        MediaSectionChild(
+            icon = R.drawable.videos,
+            mediaIdentifier = "Videos",
+            mediaCount = "301",
+            modifier = Modifier.weight(1f)
+        )
+        MediaSectionChild(
+            icon = R.drawable.electric_guitar,
+            mediaIdentifier = "Music",
+            mediaCount = "1,000,000+",
+            modifier = Modifier.weight(1f)
+        )
+        MediaSectionChild(
+            icon = R.drawable.documents,
+            mediaIdentifier = "Documents",
+            mediaCount = "100+",
+            modifier = Modifier.weight(1f)
+        )
+
+    }
+}
+
+@Composable
+fun DataSection() {
+    CenteredRow(modifier = Modifier.padding(padding14)) {
+        Box(
+            modifier = Modifier
+                .padding(padding8)
+                .background(
+                    themeColorDarker, shape = RoundedCornerShape(
+                        padding20
+                    )
+                )
+                .weight(1.2f),
+            contentAlignment = Alignment.Center
+        ) {
+            CenteredRow() {
+                DataSectionChild(
+                    modifier = Modifier
+                        .weight(1f)
+                        .padding(padding6),
+                    icon = R.drawable.trash,
+                    mediaIdentifier = "Trash"
+                )
+
+                DataSectionChild(
+                    modifier = Modifier.weight(1f),
+                    icon = R.drawable.graph,
+                    mediaIdentifier = "Analyze"
+                )
+
+                DataSectionChild(
+                    modifier = Modifier.weight(1f),
+                    icon = R.drawable.extras,
+                    mediaIdentifier = "Extras"
+                )
+            }
+        }
+
+
+        Box(
+            modifier = Modifier
+                .padding(padding4)
+                .background(
+                    themeColorDarker, shape = RoundedCornerShape(
+                        padding20
+                    )
+                )
+                .weight(0.6f),
+            contentAlignment = Alignment.Center
+        ) {
+            CenteredRow() {
+                CenteredRow() {
+                    DataSectionChildNoDescription(
+                        modifier = Modifier.weight(1f),
+                        icon = R.drawable.favourites,
+                        mediaIdentifier = "Favourite"
+                    )
+
+                    DataSectionChildNoDescription(
+                        modifier = Modifier.weight(1f),
+                        icon = R.drawable.download,
+                        mediaIdentifier = "Downloads"
+                    )
+                }
+            }
+        }
+
+    }
+}
+
+
+@Composable
+fun MediaSectionChild(
+    icon: Int,
+    mediaIdentifier: String,
+    mediaCount: String,
+    modifier: Modifier = Modifier
+) {
+    Box(
+        modifier = modifier
+            .padding(padding4)
+            .aspectRatio(1f)
+            .background(
+            themeColorDarker, shape = RoundedCornerShape(
+                20.dp
+            )
+        ),
+        contentAlignment = Alignment.Center
+    ) {
+        CenteredColumn(modifier = Modifier.padding(padding8)) {
+            Image(
+                painter = painterResource(id = icon),
+                contentDescription = "$mediaIdentifier icon",
+                modifier = Modifier.fillMaxWidth(0.4f)
+            )
+            CustomSpacer(bottom = 5.dp)
+            Text(text = mediaIdentifier, fontSize = 12.sp)
+            CustomSpacer(bottom = 5.dp)
+            ExpansivaText(textContent = mediaCount, fontSize = 12.sp)
+        }
+    }
+}
+
+@Composable
+fun DataSectionChild(
+    modifier: Modifier = Modifier,
+    icon: Int, mediaIdentifier: String
+) {
+    Box(
+        modifier = modifier.padding(padding4)
+    ) {
+        CenteredColumn(modifier = Modifier.padding(2.dp)) {
+            Image(
+                painter = painterResource(id = icon),
+                contentDescription = "$mediaIdentifier icon",
+                modifier = Modifier.fillMaxWidth(0.8f)
+            )
+            CustomSpacer(bottom = 5.dp)
+            Text(text = mediaIdentifier, fontSize = 12.sp)
+        }
+    }
+}
+
+
+
+@Composable
+fun DataSectionChildNoDescription(
+    modifier: Modifier = Modifier,
+    icon: Int, mediaIdentifier: String
+) {
+    Box(
+        modifier = modifier.padding(padding8)
+    ) {
+        CenteredColumn(modifier = Modifier.padding(2.dp)) {
+            Image(
+                painter = painterResource(id = icon),
+                contentDescription = "$mediaIdentifier icon",
+                modifier = Modifier.fillMaxWidth(0.8f)
+            )
+            CustomSpacer(bottom = 5.dp)
+        }
+    }
+}
+
+@Composable
+fun ActionsSection() {
+    CenteredRow {
+        CenteredRow(modifier = Modifier.weight(1f)) {
+            CenteredColumn {
+
+            }
+        }
+        CenteredRow(modifier = Modifier.weight(5f)) {
+            CenteredColumn {
+
+            }
+        }
     }
 }
 
