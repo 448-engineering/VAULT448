@@ -14,6 +14,7 @@ import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.sp
 import e448.productivity.vault448.R
@@ -72,6 +73,6 @@ fun ExpansivaText(
 
     Text(
         textContent, textAlign = textAlign, fontFamily = expansivaFont, modifier = modifier,
-        fontWeight = fontWeight, fontSize = fontSize
+        fontWeight = fontWeight, fontSize = fontSize, maxLines = 1, overflow = TextOverflow.Ellipsis
     )
 }

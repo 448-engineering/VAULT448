@@ -1,5 +1,16 @@
 package e448.productivity.vault448
 
+import android.app.usage.StorageStatsManager
+import android.content.Context
+import android.os.Build
+import android.os.Environment
+import android.os.Parcel
+import android.os.StatFs
+import android.os.storage.StorageManager
+import android.os.storage.StorageVolume
+import android.text.format.Formatter
+import android.util.Log
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -10,7 +21,6 @@ import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Divider
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -19,20 +29,31 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.RectangleShape
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.core.content.ContextCompat
 import e448.productivity.vault448.ui.theme.ExpansivaText
 import e448.productivity.vault448.ui.theme.FullRowCenteredTextLarge
 import e448.productivity.vault448.ui.theme.VAULT448Theme
 import e448.productivity.vault448.ui.theme.themeColorDarker
 import e448.productivity.vault448.ui.theme.themeColorLight
+import java.io.File
 
+
+@RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun RootUI() {
+    /*val rootStorage = Environment.getRootDirectory().absolutePath;
+    val statFs = StatFs(rootStorage.toString())
+    val totalBytes: Long = statFs.blockCountLong * statFs.blockSizeLong
+    val totalSizeInMB = totalBytes / (1024 * 1024 * 1024)*/
+
+    val internalStorageDetails = getStorageVolumesAccessState(LocalContext.current)
+
     CenteredColumn() {
         FullRowCenteredTextLarge(
             "FILE  MANAGER"
@@ -41,10 +62,10 @@ fun RootUI() {
             modifier = Modifier.padding(padding14),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            InternalStorageOverview(Modifier.weight(3f))
+            InternalStorageOverview(Modifier.weight(3f), internalStorageDetails = internalStorageDetails)
             CustomSpacer(20.dp)
             Column(modifier = Modifier.weight(1f)) {
-                InternalStorageCalc()
+                InternalStorageCalc(internalStorageDetails = internalStorageDetails)
                 CustomSpacer(dp = 1.dp, bottom = 10.dp)
                 FilesCalc()
             }
@@ -63,8 +84,11 @@ fun RootUI() {
     }
 }
 
+
+@RequiresApi(Build.VERSION_CODES.O)
 @Composable
-fun InternalStorageOverview(modifier: Modifier = Modifier) {
+fun InternalStorageOverview(modifier: Modifier = Modifier, internalStorageDetails: InternalStorageDetails) {
+
     Column(
         modifier = modifier
             .background(
@@ -84,14 +108,14 @@ fun InternalStorageOverview(modifier: Modifier = Modifier) {
                 contentDescription = "Files Image",
                 modifier = Modifier.fillMaxWidth(.6f)
             )
-            CustomSpacer(100.dp, bottom = 20.dp)
+            CustomSpacer(bottom = 5.dp)
             ExpansivaText(
-                "47%",
+                "${internalStorageDetails.percentageUsed.toString()}%",
                 fontSize = 40.sp,
                 fontWeight = FontWeight.Normal
             )
-            CustomSpacer(100.dp, bottom = 10.dp)
-            Text("/storage/emulate/0")
+            CustomSpacer(100.dp, bottom = 5.dp)
+            Text("${internalStorageDetails.path}")
         }
     }
 }
@@ -99,6 +123,7 @@ fun InternalStorageOverview(modifier: Modifier = Modifier) {
 @Composable
 fun InternalStorageCalc(
     modifier: Modifier = Modifier,
+    internalStorageDetails: InternalStorageDetails
 ) {
     val gibTextSize = 10.sp;
 
@@ -124,11 +149,11 @@ fun InternalStorageCalc(
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.Center
             ) {
-                ExpansivaText(textContent = "40GiB", fontSize = gibTextSize)
+                ExpansivaText(textContent = "${internalStorageDetails.usedSpace} GiB", fontSize = gibTextSize)
                 CustomSpacer(100.dp, bottom = 2.dp)
                 Divider(color = themeColorLight, thickness = 1.dp)
                 CustomSpacer(100.dp, bottom = 4.dp)
-                ExpansivaText(textContent = "256GiB", fontSize = gibTextSize)
+                ExpansivaText(textContent = "${internalStorageDetails.totalSpace} GiB", fontSize = gibTextSize)
             }
         }
 
