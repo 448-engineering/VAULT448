@@ -5,5 +5,5 @@ class Vault448Native {
         System.loadLibrary("vault448_native");
     }
 
-    external fun sillyString(): String
+    external fun ffiVersion(): String
 }

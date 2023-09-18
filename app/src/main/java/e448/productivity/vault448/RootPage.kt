@@ -1,68 +1,64 @@
 package e448.productivity.vault448
 
-import android.app.usage.StorageStatsManager
-import android.content.Context
 import android.os.Build
-import android.os.Environment
-import android.os.Parcel
-import android.os.StatFs
-import android.os.storage.StorageManager
-import android.os.storage.StorageVolume
-import android.text.format.Formatter
-import android.util.Log
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.aspectRatio
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Divider
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Scaffold
+import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.Text
+import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.core.content.ContextCompat
 import e448.productivity.vault448.ui.theme.ExpansivaText
 import e448.productivity.vault448.ui.theme.FullRowCenteredTextLarge
-import e448.productivity.vault448.ui.theme.VAULT448Theme
 import e448.productivity.vault448.ui.theme.themeColorDarker
 import e448.productivity.vault448.ui.theme.themeColorLight
-import java.io.File
-
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
-fun RootUI() {
-    /*val rootStorage = Environment.getRootDirectory().absolutePath;
-    val statFs = StatFs(rootStorage.toString())
-    val totalBytes: Long = statFs.blockCountLong * statFs.blockSizeLong
-    val totalSizeInMB = totalBytes / (1024 * 1024 * 1024)*/
-
+fun RootUI(nativeClass: Vault448Native) {
     val internalStorageDetails = getStorageVolumesAccessState(LocalContext.current)
 
-    CenteredColumn() {
+    val isSheetOpen = rememberSaveable {
+        mutableStateOf(false)
+    }
+
+    CenteredColumn {
+        RootModalBottomSheet(isSheetOpen, nativeClass)
         FullRowCenteredTextLarge(
-            "FILE  MANAGER"
+            "FILE  MANAGER",
+            modifier = Modifier.clickable {
+                isSheetOpen.value = true
+            }
         )
         Row(
             modifier = Modifier.padding(padding14),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            InternalStorageOverview(Modifier.weight(3f), internalStorageDetails = internalStorageDetails)
+            InternalStorageOverview(
+                Modifier.weight(3f),
+                internalStorageDetails = internalStorageDetails
+            )
             CustomSpacer(20.dp)
             Column(modifier = Modifier.weight(1f)) {
                 InternalStorageCalc(internalStorageDetails = internalStorageDetails)
@@ -84,10 +80,50 @@ fun RootUI() {
     }
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun RootModalBottomSheet(isSheetOpen: MutableState<Boolean>, nativeClass: Vault448Native) {
+    val packageManager = LocalContext.current.packageManager
+    val packageName = LocalContext.current.packageName
+    val packageInfo = packageManager.getPackageInfo(packageName, 0)
+    val versionName = packageInfo.versionName
+    val ffiVersion = nativeClass.ffiVersion()
+
+    if (isSheetOpen.value) {
+        ModalBottomSheet(
+            onDismissRequest = {
+                isSheetOpen.value = false
+            },
+            sheetState = rememberModalBottomSheetState()
+        ) {
+            Column(
+                verticalArrangement = Arrangement.SpaceAround,
+                horizontalAlignment = Alignment.CenterHorizontally,
+                modifier = Modifier.padding(padding14)
+            ) {
+                Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Center) {
+                    Image(
+                        painter = painterResource(id = R.drawable.vault448_logo_horizontal),
+                        contentDescription = "VAULT448_LOGO_HORIZONTAL",
+                        modifier = Modifier.fillMaxWidth(.8f)
+                    )
+                }
+
+                ExpansivaText(textContent = "APP VERSION: $versionName", fontSize = 12.sp)
+                ExpansivaText(textContent = "FFI VERSION: $ffiVersion", fontSize = 12.sp)
+
+            }
+        }
+    }
+}
+
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
-fun InternalStorageOverview(modifier: Modifier = Modifier, internalStorageDetails: InternalStorageDetails) {
+fun InternalStorageOverview(
+    modifier: Modifier = Modifier,
+    internalStorageDetails: InternalStorageDetails
+) {
 
     Column(
         modifier = modifier
@@ -110,12 +146,12 @@ fun InternalStorageOverview(modifier: Modifier = Modifier, internalStorageDetail
             )
             CustomSpacer(bottom = 5.dp)
             ExpansivaText(
-                "${internalStorageDetails.percentageUsed.toString()}%",
+                "${internalStorageDetails.percentageUsed}%",
                 fontSize = 40.sp,
                 fontWeight = FontWeight.Normal
             )
             CustomSpacer(100.dp, bottom = 5.dp)
-            Text("${internalStorageDetails.path}")
+            Text(internalStorageDetails.path)
         }
     }
 }
@@ -125,7 +161,7 @@ fun InternalStorageCalc(
     modifier: Modifier = Modifier,
     internalStorageDetails: InternalStorageDetails
 ) {
-    val gibTextSize = 10.sp;
+    val gibTextSize = 10.sp
 
     Column(
         modifier = modifier
@@ -149,11 +185,17 @@ fun InternalStorageCalc(
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.Center
             ) {
-                ExpansivaText(textContent = "${internalStorageDetails.usedSpace} GiB", fontSize = gibTextSize)
+                ExpansivaText(
+                    textContent = "${internalStorageDetails.usedSpace} GiB",
+                    fontSize = gibTextSize
+                )
                 CustomSpacer(100.dp, bottom = 2.dp)
                 Divider(color = themeColorLight, thickness = 1.dp)
                 CustomSpacer(100.dp, bottom = 4.dp)
-                ExpansivaText(textContent = "${internalStorageDetails.totalSpace} GiB", fontSize = gibTextSize)
+                ExpansivaText(
+                    textContent = "${internalStorageDetails.totalSpace} GiB",
+                    fontSize = gibTextSize
+                )
             }
         }
 
@@ -287,7 +329,7 @@ fun DataSection() {
                 .weight(0.6f),
             contentAlignment = Alignment.Center
         ) {
-            CenteredRow() {
+            CenteredRow{
                 DataSectionChildNoDescription(
                     modifier = Modifier.weight(1f),
                     icon = R.drawable.favourites,
@@ -392,23 +434,4 @@ fun ActionsSection() {
             }
         }
     }
-}
-
-@OptIn(ExperimentalMaterial3Api::class)
-@Preview(showBackground = true)
-@Composable
-fun GreetingPreview() {
-    VAULT448Theme {
-        Scaffold { padding ->
-            Column(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(padding)
-            ) {
-                RootUI()
-            }
-        }
-    }
-
-
 }

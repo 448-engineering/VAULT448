@@ -10,7 +10,6 @@ import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
@@ -28,6 +27,8 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         super.onCreate(savedInstanceState)
 
+        val nativeClass = Vault448Native()
+
         setContent {
             VAULT448Theme {
                 // A surface container using the 'background' color from the theme
@@ -37,7 +38,7 @@ class MainActivity : ComponentActivity() {
                     val isExternalStorageManager =
                         remember { mutableStateOf(checkIsExternalStorageManager()) }
 
-                    IsStorageManager(isExternalStorageManager)
+                    IsStorageManager(isExternalStorageManager,nativeClass)
 
                 }
             }
@@ -45,9 +46,8 @@ class MainActivity : ComponentActivity() {
     }
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun IsStorageManager(isStorageManagerListener: MutableState<Boolean>) {
+fun IsStorageManager(isStorageManagerListener: MutableState<Boolean>, nativeClass: Vault448Native) {
     Scaffold { padding ->
         Column(
             modifier = Modifier
@@ -56,10 +56,9 @@ fun IsStorageManager(isStorageManagerListener: MutableState<Boolean>) {
         ) {
             @RequiresApi(Build.VERSION_CODES.R) if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
                 if (isStorageManagerListener.value) {
-                    RootUI()
+                    RootUI(nativeClass)
                 } else {
                     RequestExternalStorageDirPermission(isStorageManagerListener)
-
                 }
             } else {
                 CheckPermissionsAndroidPreR(LocalContext.current)
