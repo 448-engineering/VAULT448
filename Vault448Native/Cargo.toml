@@ -12,6 +12,23 @@ name = "vault448_native"
 crate-type = ["cdylib"]
 
 [dependencies]
+easy-jni = "0.3.0"
 fs_extra = "1.3.0"
-jni = { version = "0.21.1", features = ["invocation"] }
 notify = { version = "6.1.1", default-features = false }
+file-format = { version = "0.20.0", features = [
+    "reader",
+    "reader-asf",
+    "reader-cfb",
+    "reader-ebml",
+    "reader-exe",
+    "reader-pdf",
+    "reader-rm",
+    "reader-txt",
+    "reader-xml",
+    "reader-zip",
+] }
+byte_prefix = "1.0.0"
+smol = "1.3.0"
+tai64 = { version = "4.0.0", features = [] }
+camino = "1.1.6"
+blocking = "1.3.1"
