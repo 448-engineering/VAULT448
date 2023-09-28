@@ -4,6 +4,4 @@ class Vault448Native {
     init {
         System.loadLibrary("vault448_native");
     }
-
-    external fun ffiVersion(): String
 }
