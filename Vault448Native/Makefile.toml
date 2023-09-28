@@ -5,12 +5,28 @@ dependencies = ["check"]
 [tasks.android_arm_release]
 script = '''
 echo -------- ANDROID_BUILD::armv7_armv8 ---------
-cargo ndk -t armeabi-v7a -t arm64-v8a -o ../app/src/main/jniLibs build --release
+cargo ndk -t armeabi-v7a -t arm64-v8a -o ../app/src/main/jniLibs build --lib --release
 '''
-watch = { }
+dependencies = ["copy_kotlin_bindings"]
 
 [tasks.android_x86_64_release]
 script = '''
 echo -------- ANDROID_BUILD::x86_64 ---------
-cargo ndk -t x86_64 -o ../app/src/main/jniLibs build --release
+cargo ndk -t x86_64 -o ../app/src/main/jniLibs build --lib --release
 '''
+dependencies = ["copy_kotlin_bindings"]
+
+[tasks.generate_bindings]
+script = '''
+echo -------- KOTLIN BINDINGS::uniffi ---------
+cargo run --release --features=uniffi/cli --bin uniffi-bindgen generate src/api.udl --language kotlin --out-dir uniffi_out
+'''
+
+
+[tasks.copy_kotlin_bindings]
+script = '''
+echo -------- COPYING KOTLIN BINDINGS ---------
+cp ./uniffi_out/e448/productivity/vault448/rustFFI.kt ../app/src/main/java/e448/productivity/vault448/rustFFI.kt
+echo -------- FINISHED COPYING KOTLIN BINDINGS ---------
+'''
+dependencies = ["generate_bindings"]

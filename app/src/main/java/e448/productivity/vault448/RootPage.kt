@@ -87,9 +87,10 @@ fun RootModalBottomSheet(isSheetOpen: MutableState<Boolean>, nativeClass: Vault4
     val packageName = LocalContext.current.packageName
     val packageInfo = packageManager.getPackageInfo(packageName, 0)
     val versionName = packageInfo.versionName
-    val ffiVersion = nativeClass.ffiVersion()
 
-    if (isSheetOpen.value) {
+    val ffiVersion = ffiVersion()
+
+        if (isSheetOpen.value) {
         ModalBottomSheet(
             onDismissRequest = {
                 isSheetOpen.value = false

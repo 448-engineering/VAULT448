@@ -51,3 +51,4 @@ local.properties
 /Vault448Native/Cargo.lock
 /Vault448Native/logs
 /Vault448Native/.vscode
+/Vault448Native/uniffi_out
