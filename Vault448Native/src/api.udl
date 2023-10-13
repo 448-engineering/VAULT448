@@ -1,3 +1,0 @@
-namespace rustFFI {
-  string ffi_version();
-};

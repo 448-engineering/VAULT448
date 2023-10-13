@@ -7,26 +7,54 @@ script = '''
 echo -------- ANDROID_BUILD::armv7_armv8 ---------
 cargo ndk -t armeabi-v7a -t arm64-v8a -o ../app/src/main/jniLibs build --lib --release
 '''
-dependencies = ["copy_kotlin_bindings"]
 
 [tasks.android_x86_64_release]
 script = '''
 echo -------- ANDROID_BUILD::x86_64 ---------
 cargo ndk -t x86_64 -o ../app/src/main/jniLibs build --lib --release
 '''
-dependencies = ["copy_kotlin_bindings"]
 
-[tasks.generate_bindings]
+[tasks.generate_bindings_arm]
 script = '''
 echo -------- KOTLIN BINDINGS::uniffi ---------
-cargo run --release --features=uniffi/cli --bin uniffi-bindgen generate src/api.udl --language kotlin --out-dir uniffi_out
+cargo run --release --features=uniffi/cli --bin uniffi-bindgen generate --library target/aarch64-linux-android/release/libvault448_native.so --language kotlin --out-dir uniffi_out
 '''
+dependencies = ["android_arm_release"]
 
-
-[tasks.copy_kotlin_bindings]
+[tasks.generate_bindings_x86_64]
 script = '''
-echo -------- COPYING KOTLIN BINDINGS ---------
+echo -------- KOTLIN BINDINGS::uniffi ---------
+cargo run --release --features=uniffi/cli --bin uniffi-bindgen generate --library target/armv7-linux-androideabi/release/libvault448_native.so --language kotlin --out-dir uniffi_out
+'''
+dependencies = ["android_x86_64_release"]
+
+
+[tasks.copy_kotlin_bindings_arm]
+script = '''
+echo -------- COPYING KOTLIN BINDINGS FOR ARM ---------
 cp ./uniffi_out/e448/productivity/vault448/rustFFI.kt ../app/src/main/java/e448/productivity/vault448/rustFFI.kt
 echo -------- FINISHED COPYING KOTLIN BINDINGS ---------
 '''
-dependencies = ["generate_bindings"]
+dependencies = ["generate_bindings_arm"]
+
+
+[tasks.copy_kotlin_bindings_x86_64]
+script = '''
+echo -------- COPYING KOTLIN BINDINGS FOR ARM ---------
+cp ./uniffi_out/e448/productivity/vault448/rustFFI.kt ../app/src/main/java/e448/productivity/vault448/rustFFI.kt
+echo -------- FINISHED COPYING KOTLIN BINDINGS ---------
+'''
+dependencies = ["generate_bindings_x86_64"]
+
+[tasks.build_arm]
+script = '''
+echo -------- FINISHED BUILDING OPS FOR ARM ---------
+'''
+dependencies = ["copy_kotlin_bindings_arm"]
+
+
+[tasks.build_x86_64]
+script = '''
+echo -------- FINISHED BUILDING OPS FOR ARM ---------
+'''
+dependencies = ["copy_kotlin_bindings_x86_64"]

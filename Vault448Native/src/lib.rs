@@ -1,4 +1,13 @@
 mod api;
 pub use api::*;
 
-uniffi::include_scaffolding!("api");
+mod fs_reader;
+pub use fs_reader::*;
+
+mod constants;
+pub use constants::*;
+
+mod errors;
+pub use errors::*;
+
+uniffi::setup_scaffolding!("rustFFI");
