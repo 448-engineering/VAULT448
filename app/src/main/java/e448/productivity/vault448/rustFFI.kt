@@ -10,7 +10,7 @@ package e448.productivity.vault448;
 // Ideally this would live in a separate .kt file where it can be unittested etc
 // in isolation, and perhaps even published as a re-useable package.
 //
-// However, it's important that the detils of how this helper code works (e.g. the
+// However, it's important that the details of how this helper code works (e.g. the
 // way that different builtin types are passed across the FFI) exactly match what's
 // expected by the Rust code on the other side of the interface. In practice right
 // now that means coming from the exact some version of `uniffi` that was used to
@@ -26,7 +26,12 @@ import com.sun.jna.Callback
 import com.sun.jna.ptr.*
 import java.nio.ByteBuffer
 import java.nio.ByteOrder
+import java.nio.CharBuffer
+import java.nio.charset.CodingErrorAction
 import java.util.concurrent.ConcurrentHashMap
+import kotlin.coroutines.resume
+import kotlinx.coroutines.CancellableContinuation
+import kotlinx.coroutines.suspendCancellableCoroutine
 
 // This is a helper for safely working with byte buffers returned from the Rust code.
 // A rust-owned buffer is represented by its capacity, its current length, and a
@@ -43,15 +48,15 @@ open class RustBuffer : Structure() {
 
     companion object {
         internal fun alloc(size: Int = 0) = rustCall() { status ->
-            _UniFFILib.INSTANCE.ffi_rustFFI_rustbuffer_alloc(size, status).also {
-                if(it.data == null) {
-                   throw RuntimeException("RustBuffer.alloc() returned null data pointer (size=${size})")
-               }
-            }
+            _UniFFILib.INSTANCE.ffi_vault448_native_rustbuffer_alloc(size, status)
+        }.also {
+            if(it.data == null) {
+               throw RuntimeException("RustBuffer.alloc() returned null data pointer (size=${size})")
+           }
         }
 
         internal fun free(buf: RustBuffer.ByValue) = rustCall() { status ->
-            _UniFFILib.INSTANCE.ffi_rustFFI_rustbuffer_free(buf, status)
+            _UniFFILib.INSTANCE.ffi_vault448_native_rustbuffer_free(buf, status)
         }
     }
 
@@ -257,6 +262,8 @@ private inline fun <U> rustCall(callback: (RustCallStatus) -> U): U {
 public class USize(value: Long = 0) : IntegerType(Native.SIZE_T_SIZE, value, true) {
     // This is needed to fill in the gaps of IntegerType's implementation of Number for Kotlin.
     override fun toByte() = toInt().toByte()
+    // Needed until https://youtrack.jetbrains.com/issue/KT-47902 is fixed.
+    @Deprecated("`toInt().toChar()` is deprecated")
     override fun toChar() = toInt().toChar()
     override fun toShort() = toInt().toShort()
 
@@ -328,9 +335,14 @@ internal class UniFfiHandleMap<T: Any> {
         return map.get(handle)
     }
 
-    fun remove(handle: USize) {
-        map.remove(handle)
+    fun remove(handle: USize): T? {
+        return map.remove(handle)
     }
+}
+
+// FFI type for Rust future continuations
+internal interface UniFffiRustFutureContinuationCallbackType : com.sun.jna.Callback {
+    fun callback(continuationHandle: USize, pollResult: Short);
 }
 
 // Contains loading, initialization code,
@@ -360,32 +372,143 @@ internal interface _UniFFILib : Library {
             .also { lib: _UniFFILib ->
                 uniffiCheckContractApiVersion(lib)
                 uniffiCheckApiChecksums(lib)
+                uniffiRustFutureContinuationCallback.register(lib)
                 }
         }
     }
 
-    fun uniffi_rustFFI_fn_func_ffi_version(_uniffi_out_err: RustCallStatus, 
+    fun uniffi_vault448_native_fn_func_exec_timer(`delay`: Long,
+    ): Pointer
+    fun uniffi_vault448_native_fn_func_ffi_version(_uniffi_out_err: RustCallStatus, 
     ): RustBuffer.ByValue
-    fun ffi_rustFFI_rustbuffer_alloc(`size`: Int,_uniffi_out_err: RustCallStatus, 
+    fun ffi_vault448_native_rustbuffer_alloc(`size`: Int,_uniffi_out_err: RustCallStatus, 
     ): RustBuffer.ByValue
-    fun ffi_rustFFI_rustbuffer_from_bytes(`bytes`: ForeignBytes.ByValue,_uniffi_out_err: RustCallStatus, 
+    fun ffi_vault448_native_rustbuffer_from_bytes(`bytes`: ForeignBytes.ByValue,_uniffi_out_err: RustCallStatus, 
     ): RustBuffer.ByValue
-    fun ffi_rustFFI_rustbuffer_free(`buf`: RustBuffer.ByValue,_uniffi_out_err: RustCallStatus, 
+    fun ffi_vault448_native_rustbuffer_free(`buf`: RustBuffer.ByValue,_uniffi_out_err: RustCallStatus, 
     ): Unit
-    fun ffi_rustFFI_rustbuffer_reserve(`buf`: RustBuffer.ByValue,`additional`: Int,_uniffi_out_err: RustCallStatus, 
+    fun ffi_vault448_native_rustbuffer_reserve(`buf`: RustBuffer.ByValue,`additional`: Int,_uniffi_out_err: RustCallStatus, 
     ): RustBuffer.ByValue
-    fun uniffi_rustFFI_checksum_func_ffi_version(
+    fun ffi_vault448_native_rust_future_continuation_callback_set(`callback`: UniFffiRustFutureContinuationCallbackType,
+    ): Unit
+    fun ffi_vault448_native_rust_future_poll_u8(`handle`: Pointer,`uniffiCallback`: USize,
+    ): Unit
+    fun ffi_vault448_native_rust_future_cancel_u8(`handle`: Pointer,
+    ): Unit
+    fun ffi_vault448_native_rust_future_free_u8(`handle`: Pointer,
+    ): Unit
+    fun ffi_vault448_native_rust_future_complete_u8(`handle`: Pointer,_uniffi_out_err: RustCallStatus, 
+    ): Byte
+    fun ffi_vault448_native_rust_future_poll_i8(`handle`: Pointer,`uniffiCallback`: USize,
+    ): Unit
+    fun ffi_vault448_native_rust_future_cancel_i8(`handle`: Pointer,
+    ): Unit
+    fun ffi_vault448_native_rust_future_free_i8(`handle`: Pointer,
+    ): Unit
+    fun ffi_vault448_native_rust_future_complete_i8(`handle`: Pointer,_uniffi_out_err: RustCallStatus, 
+    ): Byte
+    fun ffi_vault448_native_rust_future_poll_u16(`handle`: Pointer,`uniffiCallback`: USize,
+    ): Unit
+    fun ffi_vault448_native_rust_future_cancel_u16(`handle`: Pointer,
+    ): Unit
+    fun ffi_vault448_native_rust_future_free_u16(`handle`: Pointer,
+    ): Unit
+    fun ffi_vault448_native_rust_future_complete_u16(`handle`: Pointer,_uniffi_out_err: RustCallStatus, 
     ): Short
-    fun ffi_rustFFI_uniffi_contract_version(
+    fun ffi_vault448_native_rust_future_poll_i16(`handle`: Pointer,`uniffiCallback`: USize,
+    ): Unit
+    fun ffi_vault448_native_rust_future_cancel_i16(`handle`: Pointer,
+    ): Unit
+    fun ffi_vault448_native_rust_future_free_i16(`handle`: Pointer,
+    ): Unit
+    fun ffi_vault448_native_rust_future_complete_i16(`handle`: Pointer,_uniffi_out_err: RustCallStatus, 
+    ): Short
+    fun ffi_vault448_native_rust_future_poll_u32(`handle`: Pointer,`uniffiCallback`: USize,
+    ): Unit
+    fun ffi_vault448_native_rust_future_cancel_u32(`handle`: Pointer,
+    ): Unit
+    fun ffi_vault448_native_rust_future_free_u32(`handle`: Pointer,
+    ): Unit
+    fun ffi_vault448_native_rust_future_complete_u32(`handle`: Pointer,_uniffi_out_err: RustCallStatus, 
+    ): Int
+    fun ffi_vault448_native_rust_future_poll_i32(`handle`: Pointer,`uniffiCallback`: USize,
+    ): Unit
+    fun ffi_vault448_native_rust_future_cancel_i32(`handle`: Pointer,
+    ): Unit
+    fun ffi_vault448_native_rust_future_free_i32(`handle`: Pointer,
+    ): Unit
+    fun ffi_vault448_native_rust_future_complete_i32(`handle`: Pointer,_uniffi_out_err: RustCallStatus, 
+    ): Int
+    fun ffi_vault448_native_rust_future_poll_u64(`handle`: Pointer,`uniffiCallback`: USize,
+    ): Unit
+    fun ffi_vault448_native_rust_future_cancel_u64(`handle`: Pointer,
+    ): Unit
+    fun ffi_vault448_native_rust_future_free_u64(`handle`: Pointer,
+    ): Unit
+    fun ffi_vault448_native_rust_future_complete_u64(`handle`: Pointer,_uniffi_out_err: RustCallStatus, 
+    ): Long
+    fun ffi_vault448_native_rust_future_poll_i64(`handle`: Pointer,`uniffiCallback`: USize,
+    ): Unit
+    fun ffi_vault448_native_rust_future_cancel_i64(`handle`: Pointer,
+    ): Unit
+    fun ffi_vault448_native_rust_future_free_i64(`handle`: Pointer,
+    ): Unit
+    fun ffi_vault448_native_rust_future_complete_i64(`handle`: Pointer,_uniffi_out_err: RustCallStatus, 
+    ): Long
+    fun ffi_vault448_native_rust_future_poll_f32(`handle`: Pointer,`uniffiCallback`: USize,
+    ): Unit
+    fun ffi_vault448_native_rust_future_cancel_f32(`handle`: Pointer,
+    ): Unit
+    fun ffi_vault448_native_rust_future_free_f32(`handle`: Pointer,
+    ): Unit
+    fun ffi_vault448_native_rust_future_complete_f32(`handle`: Pointer,_uniffi_out_err: RustCallStatus, 
+    ): Float
+    fun ffi_vault448_native_rust_future_poll_f64(`handle`: Pointer,`uniffiCallback`: USize,
+    ): Unit
+    fun ffi_vault448_native_rust_future_cancel_f64(`handle`: Pointer,
+    ): Unit
+    fun ffi_vault448_native_rust_future_free_f64(`handle`: Pointer,
+    ): Unit
+    fun ffi_vault448_native_rust_future_complete_f64(`handle`: Pointer,_uniffi_out_err: RustCallStatus, 
+    ): Double
+    fun ffi_vault448_native_rust_future_poll_pointer(`handle`: Pointer,`uniffiCallback`: USize,
+    ): Unit
+    fun ffi_vault448_native_rust_future_cancel_pointer(`handle`: Pointer,
+    ): Unit
+    fun ffi_vault448_native_rust_future_free_pointer(`handle`: Pointer,
+    ): Unit
+    fun ffi_vault448_native_rust_future_complete_pointer(`handle`: Pointer,_uniffi_out_err: RustCallStatus, 
+    ): Pointer
+    fun ffi_vault448_native_rust_future_poll_rust_buffer(`handle`: Pointer,`uniffiCallback`: USize,
+    ): Unit
+    fun ffi_vault448_native_rust_future_cancel_rust_buffer(`handle`: Pointer,
+    ): Unit
+    fun ffi_vault448_native_rust_future_free_rust_buffer(`handle`: Pointer,
+    ): Unit
+    fun ffi_vault448_native_rust_future_complete_rust_buffer(`handle`: Pointer,_uniffi_out_err: RustCallStatus, 
+    ): RustBuffer.ByValue
+    fun ffi_vault448_native_rust_future_poll_void(`handle`: Pointer,`uniffiCallback`: USize,
+    ): Unit
+    fun ffi_vault448_native_rust_future_cancel_void(`handle`: Pointer,
+    ): Unit
+    fun ffi_vault448_native_rust_future_free_void(`handle`: Pointer,
+    ): Unit
+    fun ffi_vault448_native_rust_future_complete_void(`handle`: Pointer,_uniffi_out_err: RustCallStatus, 
+    ): Unit
+    fun uniffi_vault448_native_checksum_func_exec_timer(
+    ): Short
+    fun uniffi_vault448_native_checksum_func_ffi_version(
+    ): Short
+    fun ffi_vault448_native_uniffi_contract_version(
     ): Int
     
 }
 
 private fun uniffiCheckContractApiVersion(lib: _UniFFILib) {
     // Get the bindings contract version from our ComponentInterface
-    val bindings_contract_version = 22
+    val bindings_contract_version = 24
     // Get the scaffolding contract version by calling the into the dylib
-    val scaffolding_contract_version = lib.ffi_rustFFI_uniffi_contract_version()
+    val scaffolding_contract_version = lib.ffi_vault448_native_uniffi_contract_version()
     if (bindings_contract_version != scaffolding_contract_version) {
         throw RuntimeException("UniFFI contract version mismatch: try cleaning and rebuilding your project")
     }
@@ -393,13 +516,81 @@ private fun uniffiCheckContractApiVersion(lib: _UniFFILib) {
 
 @Suppress("UNUSED_PARAMETER")
 private fun uniffiCheckApiChecksums(lib: _UniFFILib) {
-    if (lib.uniffi_rustFFI_checksum_func_ffi_version() != 15387.toShort()) {
+    if (lib.uniffi_vault448_native_checksum_func_exec_timer() != 59611.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_vault448_native_checksum_func_ffi_version() != 4975.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+}
+
+// Async support
+// Async return type handlers
+
+internal const val UNIFFI_RUST_FUTURE_POLL_READY = 0.toShort()
+internal const val UNIFFI_RUST_FUTURE_POLL_MAYBE_READY = 1.toShort()
+
+internal val uniffiContinuationHandleMap = UniFfiHandleMap<CancellableContinuation<Short>>()
+
+// FFI type for Rust future continuations
+internal object uniffiRustFutureContinuationCallback: UniFffiRustFutureContinuationCallbackType {
+    override fun callback(continuationHandle: USize, pollResult: Short) {
+        uniffiContinuationHandleMap.remove(continuationHandle)?.resume(pollResult)
+    }
+
+    internal fun register(lib: _UniFFILib) {
+        lib.ffi_vault448_native_rust_future_continuation_callback_set(this)
+    }
+}
+
+internal suspend fun<T, F, E: Exception> uniffiRustCallAsync(
+    rustFuture: Pointer,
+    pollFunc: (Pointer, USize) -> Unit,
+    completeFunc: (Pointer, RustCallStatus) -> F,
+    freeFunc: (Pointer) -> Unit,
+    liftFunc: (F) -> T,
+    errorHandler: CallStatusErrorHandler<E>
+): T {
+    try {
+        do {
+            val pollResult = suspendCancellableCoroutine<Short> { continuation ->
+                pollFunc(
+                    rustFuture,
+                    uniffiContinuationHandleMap.insert(continuation)
+                )
+            }
+        } while (pollResult != UNIFFI_RUST_FUTURE_POLL_READY);
+
+        return liftFunc(
+            rustCallWithError(errorHandler, { status -> completeFunc(rustFuture, status) })
+        )
+    } finally {
+        freeFunc(rustFuture)
     }
 }
 
 // Public interface members begin here.
 
+
+public object FfiConverterULong: FfiConverter<ULong, Long> {
+    override fun lift(value: Long): ULong {
+        return value.toULong()
+    }
+
+    override fun read(buf: ByteBuffer): ULong {
+        return lift(buf.getLong())
+    }
+
+    override fun lower(value: ULong): Long {
+        return value.toLong()
+    }
+
+    override fun allocationSize(value: ULong) = 8
+
+    override fun write(value: ULong, buf: ByteBuffer) {
+        buf.putLong(value.toLong())
+    }
+}
 
 public object FfiConverterString: FfiConverter<String, RustBuffer.ByValue> {
     // Note: we don't inherit from FfiConverterRustBuffer, because we use a
@@ -422,17 +613,25 @@ public object FfiConverterString: FfiConverter<String, RustBuffer.ByValue> {
         return byteArr.toString(Charsets.UTF_8)
     }
 
+    fun toUtf8(value: String): ByteBuffer {
+        // Make sure we don't have invalid UTF-16, check for lone surrogates.
+        return Charsets.UTF_8.newEncoder().run {
+            onMalformedInput(CodingErrorAction.REPORT)
+            encode(CharBuffer.wrap(value))
+        }
+    }
+
     override fun lower(value: String): RustBuffer.ByValue {
-        val byteArr = value.toByteArray(Charsets.UTF_8)
+        val byteBuf = toUtf8(value)
         // Ideally we'd pass these bytes to `ffi_bytebuffer_from_bytes`, but doing so would require us
         // to copy them into a JNA `Memory`. So we might as well directly copy them into a `RustBuffer`.
-        val rbuf = RustBuffer.alloc(byteArr.size)
-        rbuf.asByteBuffer()!!.put(byteArr)
+        val rbuf = RustBuffer.alloc(byteBuf.limit())
+        rbuf.asByteBuffer()!!.put(byteBuf)
         return rbuf
     }
 
     // We aren't sure exactly how many bytes our string will be once it's UTF-8
-    // encoded.  Allocate 3 bytes per unicode codepoint which will always be
+    // encoded.  Allocate 3 bytes per UTF-16 code unit which will always be
     // enough.
     override fun allocationSize(value: String): Int {
         val sizeForLength = 4
@@ -441,16 +640,34 @@ public object FfiConverterString: FfiConverter<String, RustBuffer.ByValue> {
     }
 
     override fun write(value: String, buf: ByteBuffer) {
-        val byteArr = value.toByteArray(Charsets.UTF_8)
-        buf.putInt(byteArr.size)
-        buf.put(byteArr)
+        val byteBuf = toUtf8(value)
+        buf.putInt(byteBuf.limit())
+        buf.put(byteBuf)
     }
+}
+
+
+
+
+
+@Suppress("ASSIGNED_BUT_NEVER_ACCESSED_VARIABLE")
+suspend fun `execTimer`(`delay`: ULong) : String {
+    return uniffiRustCallAsync(
+        _UniFFILib.INSTANCE.uniffi_vault448_native_fn_func_exec_timer(FfiConverterULong.lower(`delay`),),
+        { future, continuation -> _UniFFILib.INSTANCE.ffi_vault448_native_rust_future_poll_rust_buffer(future, continuation) },
+        { future, status -> _UniFFILib.INSTANCE.ffi_vault448_native_rust_future_complete_rust_buffer(future, status) },
+        { future -> _UniFFILib.INSTANCE.ffi_vault448_native_rust_future_free_rust_buffer(future) },
+        // lift function
+        { FfiConverterString.lift(it) },
+        // Error FFI converter
+        NullCallStatusErrorHandler,
+    )
 }
 
 fun `ffiVersion`(): String {
     return FfiConverterString.lift(
     rustCall() { _status ->
-    _UniFFILib.INSTANCE.uniffi_rustFFI_fn_func_ffi_version(_status)
+    _UniFFILib.INSTANCE.uniffi_vault448_native_fn_func_ffi_version(_status)
 })
 }
 

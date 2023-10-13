@@ -33,6 +33,8 @@ import e448.productivity.vault448.ui.theme.ExpansivaText
 import e448.productivity.vault448.ui.theme.FullRowCenteredTextLarge
 import e448.productivity.vault448.ui.theme.themeColorDarker
 import e448.productivity.vault448.ui.theme.themeColorLight
+import e448.productivity.vault448.*;
+
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
@@ -90,30 +92,31 @@ fun RootModalBottomSheet(isSheetOpen: MutableState<Boolean>, nativeClass: Vault4
 
     val ffiVersion = ffiVersion()
 
-        if (isSheetOpen.value) {
-        ModalBottomSheet(
-            onDismissRequest = {
-                isSheetOpen.value = false
-            },
-            sheetState = rememberModalBottomSheetState()
+
+    if (isSheetOpen.value) {
+    ModalBottomSheet(
+        onDismissRequest = {
+            isSheetOpen.value = false
+        },
+        sheetState = rememberModalBottomSheetState()
+    ) {
+        Column(
+            verticalArrangement = Arrangement.SpaceAround,
+            horizontalAlignment = Alignment.CenterHorizontally,
+            modifier = Modifier.padding(padding14)
         ) {
-            Column(
-                verticalArrangement = Arrangement.SpaceAround,
-                horizontalAlignment = Alignment.CenterHorizontally,
-                modifier = Modifier.padding(padding14)
-            ) {
-                Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Center) {
-                    Image(
-                        painter = painterResource(id = R.drawable.vault448_logo_horizontal),
-                        contentDescription = "VAULT448_LOGO_HORIZONTAL",
-                        modifier = Modifier.fillMaxWidth(.8f)
-                    )
-                }
-
-                ExpansivaText(textContent = "APP VERSION: $versionName", fontSize = 12.sp)
-                ExpansivaText(textContent = "FFI VERSION: $ffiVersion", fontSize = 12.sp)
-
+            Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Center) {
+                Image(
+                    painter = painterResource(id = R.drawable.vault448_logo_horizontal),
+                    contentDescription = "VAULT448_LOGO_HORIZONTAL",
+                    modifier = Modifier.fillMaxWidth(.8f)
+                )
             }
+
+            ExpansivaText(textContent = "APP VERSION: $versionName", fontSize = 12.sp)
+            ExpansivaText(textContent = "FFI VERSION: $ffiVersion", fontSize = 12.sp)
+
+        }
         }
     }
 }
