@@ -377,9 +377,11 @@ internal interface _UniFFILib : Library {
         }
     }
 
-    fun uniffi_vault448_native_fn_func_exec_timer(`delay`: Long,
-    ): Pointer
     fun uniffi_vault448_native_fn_func_ffi_version(_uniffi_out_err: RustCallStatus, 
+    ): RustBuffer.ByValue
+    fun uniffi_vault448_native_fn_func_init(`path`: RustBuffer.ByValue,
+    ): Pointer
+    fun uniffi_vault448_native_fn_func_to_human_format(`value`: Long,`decimalPlaces`: Long,_uniffi_out_err: RustCallStatus, 
     ): RustBuffer.ByValue
     fun ffi_vault448_native_rustbuffer_alloc(`size`: Int,_uniffi_out_err: RustCallStatus, 
     ): RustBuffer.ByValue
@@ -495,9 +497,11 @@ internal interface _UniFFILib : Library {
     ): Unit
     fun ffi_vault448_native_rust_future_complete_void(`handle`: Pointer,_uniffi_out_err: RustCallStatus, 
     ): Unit
-    fun uniffi_vault448_native_checksum_func_exec_timer(
-    ): Short
     fun uniffi_vault448_native_checksum_func_ffi_version(
+    ): Short
+    fun uniffi_vault448_native_checksum_func_init(
+    ): Short
+    fun uniffi_vault448_native_checksum_func_to_human_format(
     ): Short
     fun ffi_vault448_native_uniffi_contract_version(
     ): Int
@@ -516,10 +520,13 @@ private fun uniffiCheckContractApiVersion(lib: _UniFFILib) {
 
 @Suppress("UNUSED_PARAMETER")
 private fun uniffiCheckApiChecksums(lib: _UniFFILib) {
-    if (lib.uniffi_vault448_native_checksum_func_exec_timer() != 59611.toShort()) {
+    if (lib.uniffi_vault448_native_checksum_func_ffi_version() != 4975.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
-    if (lib.uniffi_vault448_native_checksum_func_ffi_version() != 4975.toShort()) {
+    if (lib.uniffi_vault448_native_checksum_func_init() != 35635.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_vault448_native_checksum_func_to_human_format() != 33013.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
 }
@@ -592,6 +599,26 @@ public object FfiConverterULong: FfiConverter<ULong, Long> {
     }
 }
 
+public object FfiConverterBoolean: FfiConverter<Boolean, Byte> {
+    override fun lift(value: Byte): Boolean {
+        return value.toInt() != 0
+    }
+
+    override fun read(buf: ByteBuffer): Boolean {
+        return lift(buf.get())
+    }
+
+    override fun lower(value: Boolean): Byte {
+        return if (value) 1.toByte() else 0.toByte()
+    }
+
+    override fun allocationSize(value: Boolean) = 1
+
+    override fun write(value: Boolean, buf: ByteBuffer) {
+        buf.put(lower(value))
+    }
+}
+
 public object FfiConverterString: FfiConverter<String, RustBuffer.ByValue> {
     // Note: we don't inherit from FfiConverterRustBuffer, because we use a
     // special encoding when lowering/lifting.  We can use `RustBuffer.len` to
@@ -649,25 +676,725 @@ public object FfiConverterString: FfiConverter<String, RustBuffer.ByValue> {
 
 
 
-
-@Suppress("ASSIGNED_BUT_NEVER_ACCESSED_VARIABLE")
-suspend fun `execTimer`(`delay`: ULong) : String {
-    return uniffiRustCallAsync(
-        _UniFFILib.INSTANCE.uniffi_vault448_native_fn_func_exec_timer(FfiConverterULong.lower(`delay`),),
-        { future, continuation -> _UniFFILib.INSTANCE.ffi_vault448_native_rust_future_poll_rust_buffer(future, continuation) },
-        { future, status -> _UniFFILib.INSTANCE.ffi_vault448_native_rust_future_complete_rust_buffer(future, status) },
-        { future -> _UniFFILib.INSTANCE.ffi_vault448_native_rust_future_free_rust_buffer(future) },
-        // lift function
-        { FfiConverterString.lift(it) },
-        // Error FFI converter
-        NullCallStatusErrorHandler,
-    )
+data class ApiCurrentDirMetadata (
+    var `directories`: List<FfiFsMetadata>, 
+    var `files`: List<FfiFsFile>, 
+    var `totalDirs`: String, 
+    var `totalFiles`: String, 
+    var `path`: String, 
+    var `errors`: List<String>
+) {
+    
+    companion object
 }
+
+public object FfiConverterTypeApiCurrentDirMetadata: FfiConverterRustBuffer<ApiCurrentDirMetadata> {
+    override fun read(buf: ByteBuffer): ApiCurrentDirMetadata {
+        return ApiCurrentDirMetadata(
+            FfiConverterSequenceTypeFfiFsMetadata.read(buf),
+            FfiConverterSequenceTypeFfiFsFile.read(buf),
+            FfiConverterString.read(buf),
+            FfiConverterString.read(buf),
+            FfiConverterString.read(buf),
+            FfiConverterSequenceString.read(buf),
+        )
+    }
+
+    override fun allocationSize(value: ApiCurrentDirMetadata) = (
+            FfiConverterSequenceTypeFfiFsMetadata.allocationSize(value.`directories`) +
+            FfiConverterSequenceTypeFfiFsFile.allocationSize(value.`files`) +
+            FfiConverterString.allocationSize(value.`totalDirs`) +
+            FfiConverterString.allocationSize(value.`totalFiles`) +
+            FfiConverterString.allocationSize(value.`path`) +
+            FfiConverterSequenceString.allocationSize(value.`errors`)
+    )
+
+    override fun write(value: ApiCurrentDirMetadata, buf: ByteBuffer) {
+            FfiConverterSequenceTypeFfiFsMetadata.write(value.`directories`, buf)
+            FfiConverterSequenceTypeFfiFsFile.write(value.`files`, buf)
+            FfiConverterString.write(value.`totalDirs`, buf)
+            FfiConverterString.write(value.`totalFiles`, buf)
+            FfiConverterString.write(value.`path`, buf)
+            FfiConverterSequenceString.write(value.`errors`, buf)
+    }
+}
+
+
+
+
+data class ApiFormatKind (
+    var `name`: String, 
+    var `extension`: String, 
+    var `mediaType`: String, 
+    var `shortName`: String
+) {
+    
+    companion object
+}
+
+public object FfiConverterTypeApiFormatKind: FfiConverterRustBuffer<ApiFormatKind> {
+    override fun read(buf: ByteBuffer): ApiFormatKind {
+        return ApiFormatKind(
+            FfiConverterString.read(buf),
+            FfiConverterString.read(buf),
+            FfiConverterString.read(buf),
+            FfiConverterString.read(buf),
+        )
+    }
+
+    override fun allocationSize(value: ApiFormatKind) = (
+            FfiConverterString.allocationSize(value.`name`) +
+            FfiConverterString.allocationSize(value.`extension`) +
+            FfiConverterString.allocationSize(value.`mediaType`) +
+            FfiConverterString.allocationSize(value.`shortName`)
+    )
+
+    override fun write(value: ApiFormatKind, buf: ByteBuffer) {
+            FfiConverterString.write(value.`name`, buf)
+            FfiConverterString.write(value.`extension`, buf)
+            FfiConverterString.write(value.`mediaType`, buf)
+            FfiConverterString.write(value.`shortName`, buf)
+    }
+}
+
+
+
+
+data class CurrentDirMetadata (
+    var `dirName`: String, 
+    var `dirPath`: String, 
+    var `directories`: List<String>, 
+    var `files`: List<FfiFileMetadata>, 
+    var `size`: String, 
+    var `errors`: List<FfiDirError>
+) {
+    
+    companion object
+}
+
+public object FfiConverterTypeCurrentDirMetadata: FfiConverterRustBuffer<CurrentDirMetadata> {
+    override fun read(buf: ByteBuffer): CurrentDirMetadata {
+        return CurrentDirMetadata(
+            FfiConverterString.read(buf),
+            FfiConverterString.read(buf),
+            FfiConverterSequenceString.read(buf),
+            FfiConverterSequenceTypeFfiFileMetadata.read(buf),
+            FfiConverterString.read(buf),
+            FfiConverterSequenceTypeFfiDirError.read(buf),
+        )
+    }
+
+    override fun allocationSize(value: CurrentDirMetadata) = (
+            FfiConverterString.allocationSize(value.`dirName`) +
+            FfiConverterString.allocationSize(value.`dirPath`) +
+            FfiConverterSequenceString.allocationSize(value.`directories`) +
+            FfiConverterSequenceTypeFfiFileMetadata.allocationSize(value.`files`) +
+            FfiConverterString.allocationSize(value.`size`) +
+            FfiConverterSequenceTypeFfiDirError.allocationSize(value.`errors`)
+    )
+
+    override fun write(value: CurrentDirMetadata, buf: ByteBuffer) {
+            FfiConverterString.write(value.`dirName`, buf)
+            FfiConverterString.write(value.`dirPath`, buf)
+            FfiConverterSequenceString.write(value.`directories`, buf)
+            FfiConverterSequenceTypeFfiFileMetadata.write(value.`files`, buf)
+            FfiConverterString.write(value.`size`, buf)
+            FfiConverterSequenceTypeFfiDirError.write(value.`errors`, buf)
+    }
+}
+
+
+
+
+data class DirOutcome (
+    var `success`: CurrentDirMetadata?, 
+    var `failure`: List<String>
+) {
+    
+    companion object
+}
+
+public object FfiConverterTypeDirOutcome: FfiConverterRustBuffer<DirOutcome> {
+    override fun read(buf: ByteBuffer): DirOutcome {
+        return DirOutcome(
+            FfiConverterOptionalTypeCurrentDirMetadata.read(buf),
+            FfiConverterSequenceString.read(buf),
+        )
+    }
+
+    override fun allocationSize(value: DirOutcome) = (
+            FfiConverterOptionalTypeCurrentDirMetadata.allocationSize(value.`success`) +
+            FfiConverterSequenceString.allocationSize(value.`failure`)
+    )
+
+    override fun write(value: DirOutcome, buf: ByteBuffer) {
+            FfiConverterOptionalTypeCurrentDirMetadata.write(value.`success`, buf)
+            FfiConverterSequenceString.write(value.`failure`, buf)
+    }
+}
+
+
+
+
+data class FfiDateTimeString (
+    var `date`: String, 
+    var `time`: String
+) {
+    
+    companion object
+}
+
+public object FfiConverterTypeFfiDateTimeString: FfiConverterRustBuffer<FfiDateTimeString> {
+    override fun read(buf: ByteBuffer): FfiDateTimeString {
+        return FfiDateTimeString(
+            FfiConverterString.read(buf),
+            FfiConverterString.read(buf),
+        )
+    }
+
+    override fun allocationSize(value: FfiDateTimeString) = (
+            FfiConverterString.allocationSize(value.`date`) +
+            FfiConverterString.allocationSize(value.`time`)
+    )
+
+    override fun write(value: FfiDateTimeString, buf: ByteBuffer) {
+            FfiConverterString.write(value.`date`, buf)
+            FfiConverterString.write(value.`time`, buf)
+    }
+}
+
+
+
+
+data class FfiDirError (
+    var `path`: String, 
+    var `error`: String, 
+    var `display`: String
+) {
+    
+    companion object
+}
+
+public object FfiConverterTypeFfiDirError: FfiConverterRustBuffer<FfiDirError> {
+    override fun read(buf: ByteBuffer): FfiDirError {
+        return FfiDirError(
+            FfiConverterString.read(buf),
+            FfiConverterString.read(buf),
+            FfiConverterString.read(buf),
+        )
+    }
+
+    override fun allocationSize(value: FfiDirError) = (
+            FfiConverterString.allocationSize(value.`path`) +
+            FfiConverterString.allocationSize(value.`error`) +
+            FfiConverterString.allocationSize(value.`display`)
+    )
+
+    override fun write(value: FfiDirError, buf: ByteBuffer) {
+            FfiConverterString.write(value.`path`, buf)
+            FfiConverterString.write(value.`error`, buf)
+            FfiConverterString.write(value.`display`, buf)
+    }
+}
+
+
+
+
+data class FfiFileFormat (
+    var `extension`: String, 
+    var `name`: String, 
+    var `shortName`: String?, 
+    var `mediaType`: String
+) {
+    
+    companion object
+}
+
+public object FfiConverterTypeFfiFileFormat: FfiConverterRustBuffer<FfiFileFormat> {
+    override fun read(buf: ByteBuffer): FfiFileFormat {
+        return FfiFileFormat(
+            FfiConverterString.read(buf),
+            FfiConverterString.read(buf),
+            FfiConverterOptionalString.read(buf),
+            FfiConverterString.read(buf),
+        )
+    }
+
+    override fun allocationSize(value: FfiFileFormat) = (
+            FfiConverterString.allocationSize(value.`extension`) +
+            FfiConverterString.allocationSize(value.`name`) +
+            FfiConverterOptionalString.allocationSize(value.`shortName`) +
+            FfiConverterString.allocationSize(value.`mediaType`)
+    )
+
+    override fun write(value: FfiFileFormat, buf: ByteBuffer) {
+            FfiConverterString.write(value.`extension`, buf)
+            FfiConverterString.write(value.`name`, buf)
+            FfiConverterOptionalString.write(value.`shortName`, buf)
+            FfiConverterString.write(value.`mediaType`, buf)
+    }
+}
+
+
+
+
+data class FfiFileMetadata (
+    var `name`: String, 
+    var `path`: String, 
+    var `size`: String, 
+    var `readOnly`: Boolean, 
+    var `created`: FfiDateTimeString?, 
+    var `accessed`: FfiDateTimeString?, 
+    var `modified`: FfiDateTimeString?, 
+    var `symlink`: Boolean, 
+    var `fileFormat`: FfiFileFormat
+) {
+    
+    companion object
+}
+
+public object FfiConverterTypeFfiFileMetadata: FfiConverterRustBuffer<FfiFileMetadata> {
+    override fun read(buf: ByteBuffer): FfiFileMetadata {
+        return FfiFileMetadata(
+            FfiConverterString.read(buf),
+            FfiConverterString.read(buf),
+            FfiConverterString.read(buf),
+            FfiConverterBoolean.read(buf),
+            FfiConverterOptionalTypeFfiDateTimeString.read(buf),
+            FfiConverterOptionalTypeFfiDateTimeString.read(buf),
+            FfiConverterOptionalTypeFfiDateTimeString.read(buf),
+            FfiConverterBoolean.read(buf),
+            FfiConverterTypeFfiFileFormat.read(buf),
+        )
+    }
+
+    override fun allocationSize(value: FfiFileMetadata) = (
+            FfiConverterString.allocationSize(value.`name`) +
+            FfiConverterString.allocationSize(value.`path`) +
+            FfiConverterString.allocationSize(value.`size`) +
+            FfiConverterBoolean.allocationSize(value.`readOnly`) +
+            FfiConverterOptionalTypeFfiDateTimeString.allocationSize(value.`created`) +
+            FfiConverterOptionalTypeFfiDateTimeString.allocationSize(value.`accessed`) +
+            FfiConverterOptionalTypeFfiDateTimeString.allocationSize(value.`modified`) +
+            FfiConverterBoolean.allocationSize(value.`symlink`) +
+            FfiConverterTypeFfiFileFormat.allocationSize(value.`fileFormat`)
+    )
+
+    override fun write(value: FfiFileMetadata, buf: ByteBuffer) {
+            FfiConverterString.write(value.`name`, buf)
+            FfiConverterString.write(value.`path`, buf)
+            FfiConverterString.write(value.`size`, buf)
+            FfiConverterBoolean.write(value.`readOnly`, buf)
+            FfiConverterOptionalTypeFfiDateTimeString.write(value.`created`, buf)
+            FfiConverterOptionalTypeFfiDateTimeString.write(value.`accessed`, buf)
+            FfiConverterOptionalTypeFfiDateTimeString.write(value.`modified`, buf)
+            FfiConverterBoolean.write(value.`symlink`, buf)
+            FfiConverterTypeFfiFileFormat.write(value.`fileFormat`, buf)
+    }
+}
+
+
+
+
+data class FfiFsFile (
+    var `metadata`: FfiFsMetadata, 
+    var `media`: String, 
+    var `stem`: String, 
+    var `extension`: String, 
+    var `category`: ApiFormatKind
+) {
+    
+    companion object
+}
+
+public object FfiConverterTypeFfiFsFile: FfiConverterRustBuffer<FfiFsFile> {
+    override fun read(buf: ByteBuffer): FfiFsFile {
+        return FfiFsFile(
+            FfiConverterTypeFfiFsMetadata.read(buf),
+            FfiConverterString.read(buf),
+            FfiConverterString.read(buf),
+            FfiConverterString.read(buf),
+            FfiConverterTypeApiFormatKind.read(buf),
+        )
+    }
+
+    override fun allocationSize(value: FfiFsFile) = (
+            FfiConverterTypeFfiFsMetadata.allocationSize(value.`metadata`) +
+            FfiConverterString.allocationSize(value.`media`) +
+            FfiConverterString.allocationSize(value.`stem`) +
+            FfiConverterString.allocationSize(value.`extension`) +
+            FfiConverterTypeApiFormatKind.allocationSize(value.`category`)
+    )
+
+    override fun write(value: FfiFsFile, buf: ByteBuffer) {
+            FfiConverterTypeFfiFsMetadata.write(value.`metadata`, buf)
+            FfiConverterString.write(value.`media`, buf)
+            FfiConverterString.write(value.`stem`, buf)
+            FfiConverterString.write(value.`extension`, buf)
+            FfiConverterTypeApiFormatKind.write(value.`category`, buf)
+    }
+}
+
+
+
+
+data class FfiFsMetadata (
+    var `size`: String, 
+    var `sizeString`: String, 
+    var `name`: String, 
+    var `created`: String, 
+    var `modified`: String, 
+    var `accessed`: String, 
+    var `symlink`: Boolean, 
+    var `path`: String, 
+    var `readonly`: Boolean, 
+    var `dir`: Boolean
+) {
+    
+    companion object
+}
+
+public object FfiConverterTypeFfiFsMetadata: FfiConverterRustBuffer<FfiFsMetadata> {
+    override fun read(buf: ByteBuffer): FfiFsMetadata {
+        return FfiFsMetadata(
+            FfiConverterString.read(buf),
+            FfiConverterString.read(buf),
+            FfiConverterString.read(buf),
+            FfiConverterString.read(buf),
+            FfiConverterString.read(buf),
+            FfiConverterString.read(buf),
+            FfiConverterBoolean.read(buf),
+            FfiConverterString.read(buf),
+            FfiConverterBoolean.read(buf),
+            FfiConverterBoolean.read(buf),
+        )
+    }
+
+    override fun allocationSize(value: FfiFsMetadata) = (
+            FfiConverterString.allocationSize(value.`size`) +
+            FfiConverterString.allocationSize(value.`sizeString`) +
+            FfiConverterString.allocationSize(value.`name`) +
+            FfiConverterString.allocationSize(value.`created`) +
+            FfiConverterString.allocationSize(value.`modified`) +
+            FfiConverterString.allocationSize(value.`accessed`) +
+            FfiConverterBoolean.allocationSize(value.`symlink`) +
+            FfiConverterString.allocationSize(value.`path`) +
+            FfiConverterBoolean.allocationSize(value.`readonly`) +
+            FfiConverterBoolean.allocationSize(value.`dir`)
+    )
+
+    override fun write(value: FfiFsMetadata, buf: ByteBuffer) {
+            FfiConverterString.write(value.`size`, buf)
+            FfiConverterString.write(value.`sizeString`, buf)
+            FfiConverterString.write(value.`name`, buf)
+            FfiConverterString.write(value.`created`, buf)
+            FfiConverterString.write(value.`modified`, buf)
+            FfiConverterString.write(value.`accessed`, buf)
+            FfiConverterBoolean.write(value.`symlink`, buf)
+            FfiConverterString.write(value.`path`, buf)
+            FfiConverterBoolean.write(value.`readonly`, buf)
+            FfiConverterBoolean.write(value.`dir`, buf)
+    }
+}
+
+
+
+
+
+sealed class OutcomeException: Exception() {
+    // Each variant is a nested class
+    
+    class Failure(
+        val `failure`: String
+        ) : OutcomeException() {
+        override val message
+            get() = "failure=${ `failure` }"
+    }
+    
+
+    companion object ErrorHandler : CallStatusErrorHandler<OutcomeException> {
+        override fun lift(error_buf: RustBuffer.ByValue): OutcomeException = FfiConverterTypeOutcomeError.lift(error_buf)
+    }
+
+    
+}
+
+public object FfiConverterTypeOutcomeError : FfiConverterRustBuffer<OutcomeException> {
+    override fun read(buf: ByteBuffer): OutcomeException {
+        
+
+        return when(buf.getInt()) {
+            1 -> OutcomeException.Failure(
+                FfiConverterString.read(buf),
+                )
+            else -> throw RuntimeException("invalid error enum value, something is very wrong!!")
+        }
+    }
+
+    override fun allocationSize(value: OutcomeException): Int {
+        return when(value) {
+            is OutcomeException.Failure -> (
+                // Add the size for the Int that specifies the variant plus the size needed for all fields
+                4
+                + FfiConverterString.allocationSize(value.`failure`)
+            )
+        }
+    }
+
+    override fun write(value: OutcomeException, buf: ByteBuffer) {
+        when(value) {
+            is OutcomeException.Failure -> {
+                buf.putInt(1)
+                FfiConverterString.write(value.`failure`, buf)
+                Unit
+            }
+        }.let { /* this makes the `when` an expression, which ensures it is exhaustive */ }
+    }
+
+}
+
+
+
+
+public object FfiConverterOptionalString: FfiConverterRustBuffer<String?> {
+    override fun read(buf: ByteBuffer): String? {
+        if (buf.get().toInt() == 0) {
+            return null
+        }
+        return FfiConverterString.read(buf)
+    }
+
+    override fun allocationSize(value: String?): Int {
+        if (value == null) {
+            return 1
+        } else {
+            return 1 + FfiConverterString.allocationSize(value)
+        }
+    }
+
+    override fun write(value: String?, buf: ByteBuffer) {
+        if (value == null) {
+            buf.put(0)
+        } else {
+            buf.put(1)
+            FfiConverterString.write(value, buf)
+        }
+    }
+}
+
+
+
+
+public object FfiConverterOptionalTypeCurrentDirMetadata: FfiConverterRustBuffer<CurrentDirMetadata?> {
+    override fun read(buf: ByteBuffer): CurrentDirMetadata? {
+        if (buf.get().toInt() == 0) {
+            return null
+        }
+        return FfiConverterTypeCurrentDirMetadata.read(buf)
+    }
+
+    override fun allocationSize(value: CurrentDirMetadata?): Int {
+        if (value == null) {
+            return 1
+        } else {
+            return 1 + FfiConverterTypeCurrentDirMetadata.allocationSize(value)
+        }
+    }
+
+    override fun write(value: CurrentDirMetadata?, buf: ByteBuffer) {
+        if (value == null) {
+            buf.put(0)
+        } else {
+            buf.put(1)
+            FfiConverterTypeCurrentDirMetadata.write(value, buf)
+        }
+    }
+}
+
+
+
+
+public object FfiConverterOptionalTypeFfiDateTimeString: FfiConverterRustBuffer<FfiDateTimeString?> {
+    override fun read(buf: ByteBuffer): FfiDateTimeString? {
+        if (buf.get().toInt() == 0) {
+            return null
+        }
+        return FfiConverterTypeFfiDateTimeString.read(buf)
+    }
+
+    override fun allocationSize(value: FfiDateTimeString?): Int {
+        if (value == null) {
+            return 1
+        } else {
+            return 1 + FfiConverterTypeFfiDateTimeString.allocationSize(value)
+        }
+    }
+
+    override fun write(value: FfiDateTimeString?, buf: ByteBuffer) {
+        if (value == null) {
+            buf.put(0)
+        } else {
+            buf.put(1)
+            FfiConverterTypeFfiDateTimeString.write(value, buf)
+        }
+    }
+}
+
+
+
+
+public object FfiConverterSequenceString: FfiConverterRustBuffer<List<String>> {
+    override fun read(buf: ByteBuffer): List<String> {
+        val len = buf.getInt()
+        return List<String>(len) {
+            FfiConverterString.read(buf)
+        }
+    }
+
+    override fun allocationSize(value: List<String>): Int {
+        val sizeForLength = 4
+        val sizeForItems = value.map { FfiConverterString.allocationSize(it) }.sum()
+        return sizeForLength + sizeForItems
+    }
+
+    override fun write(value: List<String>, buf: ByteBuffer) {
+        buf.putInt(value.size)
+        value.forEach {
+            FfiConverterString.write(it, buf)
+        }
+    }
+}
+
+
+
+
+public object FfiConverterSequenceTypeFfiDirError: FfiConverterRustBuffer<List<FfiDirError>> {
+    override fun read(buf: ByteBuffer): List<FfiDirError> {
+        val len = buf.getInt()
+        return List<FfiDirError>(len) {
+            FfiConverterTypeFfiDirError.read(buf)
+        }
+    }
+
+    override fun allocationSize(value: List<FfiDirError>): Int {
+        val sizeForLength = 4
+        val sizeForItems = value.map { FfiConverterTypeFfiDirError.allocationSize(it) }.sum()
+        return sizeForLength + sizeForItems
+    }
+
+    override fun write(value: List<FfiDirError>, buf: ByteBuffer) {
+        buf.putInt(value.size)
+        value.forEach {
+            FfiConverterTypeFfiDirError.write(it, buf)
+        }
+    }
+}
+
+
+
+
+public object FfiConverterSequenceTypeFfiFileMetadata: FfiConverterRustBuffer<List<FfiFileMetadata>> {
+    override fun read(buf: ByteBuffer): List<FfiFileMetadata> {
+        val len = buf.getInt()
+        return List<FfiFileMetadata>(len) {
+            FfiConverterTypeFfiFileMetadata.read(buf)
+        }
+    }
+
+    override fun allocationSize(value: List<FfiFileMetadata>): Int {
+        val sizeForLength = 4
+        val sizeForItems = value.map { FfiConverterTypeFfiFileMetadata.allocationSize(it) }.sum()
+        return sizeForLength + sizeForItems
+    }
+
+    override fun write(value: List<FfiFileMetadata>, buf: ByteBuffer) {
+        buf.putInt(value.size)
+        value.forEach {
+            FfiConverterTypeFfiFileMetadata.write(it, buf)
+        }
+    }
+}
+
+
+
+
+public object FfiConverterSequenceTypeFfiFsFile: FfiConverterRustBuffer<List<FfiFsFile>> {
+    override fun read(buf: ByteBuffer): List<FfiFsFile> {
+        val len = buf.getInt()
+        return List<FfiFsFile>(len) {
+            FfiConverterTypeFfiFsFile.read(buf)
+        }
+    }
+
+    override fun allocationSize(value: List<FfiFsFile>): Int {
+        val sizeForLength = 4
+        val sizeForItems = value.map { FfiConverterTypeFfiFsFile.allocationSize(it) }.sum()
+        return sizeForLength + sizeForItems
+    }
+
+    override fun write(value: List<FfiFsFile>, buf: ByteBuffer) {
+        buf.putInt(value.size)
+        value.forEach {
+            FfiConverterTypeFfiFsFile.write(it, buf)
+        }
+    }
+}
+
+
+
+
+public object FfiConverterSequenceTypeFfiFsMetadata: FfiConverterRustBuffer<List<FfiFsMetadata>> {
+    override fun read(buf: ByteBuffer): List<FfiFsMetadata> {
+        val len = buf.getInt()
+        return List<FfiFsMetadata>(len) {
+            FfiConverterTypeFfiFsMetadata.read(buf)
+        }
+    }
+
+    override fun allocationSize(value: List<FfiFsMetadata>): Int {
+        val sizeForLength = 4
+        val sizeForItems = value.map { FfiConverterTypeFfiFsMetadata.allocationSize(it) }.sum()
+        return sizeForLength + sizeForItems
+    }
+
+    override fun write(value: List<FfiFsMetadata>, buf: ByteBuffer) {
+        buf.putInt(value.size)
+        value.forEach {
+            FfiConverterTypeFfiFsMetadata.write(it, buf)
+        }
+    }
+}
+
+
+
+
 
 fun `ffiVersion`(): String {
     return FfiConverterString.lift(
     rustCall() { _status ->
     _UniFFILib.INSTANCE.uniffi_vault448_native_fn_func_ffi_version(_status)
+})
+}
+
+
+@Suppress("ASSIGNED_BUT_NEVER_ACCESSED_VARIABLE")
+suspend fun `init`(`path`: String) : DirOutcome {
+    return uniffiRustCallAsync(
+        _UniFFILib.INSTANCE.uniffi_vault448_native_fn_func_init(FfiConverterString.lower(`path`),),
+        { future, continuation -> _UniFFILib.INSTANCE.ffi_vault448_native_rust_future_poll_rust_buffer(future, continuation) },
+        { future, status -> _UniFFILib.INSTANCE.ffi_vault448_native_rust_future_complete_rust_buffer(future, status) },
+        { future -> _UniFFILib.INSTANCE.ffi_vault448_native_rust_future_free_rust_buffer(future) },
+        // lift function
+        { FfiConverterTypeDirOutcome.lift(it) },
+        // Error FFI converter
+        NullCallStatusErrorHandler,
+    )
+}
+
+fun `toHumanFormat`(`value`: ULong, `decimalPlaces`: ULong): String {
+    return FfiConverterString.lift(
+    rustCall() { _status ->
+    _UniFFILib.INSTANCE.uniffi_vault448_native_fn_func_to_human_format(FfiConverterULong.lower(`value`),FfiConverterULong.lower(`decimalPlaces`),_status)
 })
 }
 

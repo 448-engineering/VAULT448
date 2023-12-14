@@ -19,8 +19,10 @@ import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.Text
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -29,17 +31,32 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import e448.productivity.vault448.*
 import e448.productivity.vault448.ui.theme.ExpansivaText
 import e448.productivity.vault448.ui.theme.FullRowCenteredTextLarge
 import e448.productivity.vault448.ui.theme.themeColorDarker
 import e448.productivity.vault448.ui.theme.themeColorLight
-import e448.productivity.vault448.*;
 
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun RootUI(nativeClass: Vault448Native) {
     val internalStorageDetails = getStorageVolumesAccessState(LocalContext.current)
+
+    val fsOutcome = remember {
+        mutableStateOf<DirOutcome>(
+            DirOutcome(
+                success = null,
+                failure = listOf<String>()
+            )
+        )
+    }
+
+    LaunchedEffect(key1 = true) {
+        val app = init(path = internalStorageDetails.path)
+        fsOutcome.value = app
+    }
+
 
     val isSheetOpen = rememberSaveable {
         mutableStateOf(false)
@@ -65,7 +82,7 @@ fun RootUI(nativeClass: Vault448Native) {
             Column(modifier = Modifier.weight(1f)) {
                 InternalStorageCalc(internalStorageDetails = internalStorageDetails)
                 CustomSpacer(dp = 1.dp, bottom = 10.dp)
-                FilesCalc()
+                FilesCalc(outcome = fsOutcome)
             }
 
         }
@@ -94,29 +111,32 @@ fun RootModalBottomSheet(isSheetOpen: MutableState<Boolean>, nativeClass: Vault4
 
 
     if (isSheetOpen.value) {
-    ModalBottomSheet(
-        onDismissRequest = {
-            isSheetOpen.value = false
-        },
-        sheetState = rememberModalBottomSheetState()
-    ) {
-        Column(
-            verticalArrangement = Arrangement.SpaceAround,
-            horizontalAlignment = Alignment.CenterHorizontally,
-            modifier = Modifier.padding(padding14)
+        ModalBottomSheet(
+            onDismissRequest = {
+                isSheetOpen.value = false
+            },
+            sheetState = rememberModalBottomSheetState()
         ) {
-            Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Center) {
-                Image(
-                    painter = painterResource(id = R.drawable.vault448_logo_horizontal),
-                    contentDescription = "VAULT448_LOGO_HORIZONTAL",
-                    modifier = Modifier.fillMaxWidth(.8f)
-                )
+            Column(
+                verticalArrangement = Arrangement.SpaceAround,
+                horizontalAlignment = Alignment.CenterHorizontally,
+                modifier = Modifier.padding(padding14)
+            ) {
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.Center
+                ) {
+                    Image(
+                        painter = painterResource(id = R.drawable.vault448_logo_horizontal),
+                        contentDescription = "VAULT448_LOGO_HORIZONTAL",
+                        modifier = Modifier.fillMaxWidth(.8f)
+                    )
+                }
+
+                ExpansivaText(textContent = "APP VERSION: $versionName", fontSize = 12.sp)
+                ExpansivaText(textContent = "FFI VERSION: $ffiVersion", fontSize = 12.sp)
+
             }
-
-            ExpansivaText(textContent = "APP VERSION: $versionName", fontSize = 12.sp)
-            ExpansivaText(textContent = "FFI VERSION: $ffiVersion", fontSize = 12.sp)
-
-        }
         }
     }
 }
@@ -210,8 +230,15 @@ fun InternalStorageCalc(
 @Composable
 fun FilesCalc(
     modifier: Modifier = Modifier,
+    outcome: MutableState<DirOutcome>
+) {
 
-    ) {
+    val textContentComputed = if (outcome.value.success == null) {
+        "∞"
+    } else {
+        val formatSize = toHumanFormat(outcome.value.success!!.files.size.toULong(), decimalPlaces = 0UL)
+        "${formatSize}+"
+    }
 
     Column(
         modifier = modifier
@@ -236,7 +263,7 @@ fun FilesCalc(
                 verticalArrangement = Arrangement.Center
             ) {
                 ExpansivaText(
-                    textContent = "10M+",
+                    textContent = textContentComputed,
                     fontSize = 20.sp,
                     fontWeight = FontWeight.Normal
                 )
@@ -333,7 +360,7 @@ fun DataSection() {
                 .weight(0.6f),
             contentAlignment = Alignment.Center
         ) {
-            CenteredRow{
+            CenteredRow {
                 DataSectionChildNoDescription(
                     modifier = Modifier.weight(1f),
                     icon = R.drawable.favourites,

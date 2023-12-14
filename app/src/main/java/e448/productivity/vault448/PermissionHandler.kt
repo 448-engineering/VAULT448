@@ -8,7 +8,6 @@ import android.os.Build
 import android.os.Environment
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.platform.LocalContext
-import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import android.provider.Settings
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
@@ -41,7 +40,6 @@ fun RequestPermission_vR() {
 
 }
 
-@OptIn(ExperimentalPermissionsApi::class)
 @Composable
 fun RequestExternalStorageDirPermission(storageListener: MutableState<Boolean>) {
     val pkgName = LocalContext.current.packageName
