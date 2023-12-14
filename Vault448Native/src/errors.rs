@@ -1,17 +1,23 @@
-use fs_extra::error::ErrorKind as FsErrorkind;
-use std::io::ErrorKind;
+use std::{io::ErrorKind, path::StripPrefixError};
 
 pub type VaultResult<T> = Result<T, VaultError>;
 
+#[derive(Debug, thiserror::Error)]
 pub enum VaultError {
+    #[error("Encountered IO Error - {0}")]
     Io(ErrorKind),
-    Dir(FsErrorkind),
-}
-
-impl From<fs_extra::error::Error> for VaultError {
-    fn from(value: fs_extra::error::Error) -> Self {
-        VaultError::Dir(value.kind)
-    }
+    #[error("Filesystem Error - Invalid Folder")]
+    InvalidFolder,
+    #[error("Filesystem Error - Invalid File")]
+    InvalidFile,
+    #[error("Filesystem Error - Invalid FileName")]
+    InvalidFileName,
+    #[error("Filesystem Error - Invalid Path")]
+    InvalidPath,
+    #[error("Filesystem Error - {0}")]
+    OsString(String),
+    #[error("Path Error - {0}")]
+    StripPrefix(StripPrefixError),
 }
 
 impl From<std::io::Error> for VaultError {
