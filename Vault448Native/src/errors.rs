@@ -18,6 +18,8 @@ pub enum VaultError {
     OsString(String),
     #[error("Path Error - {0}")]
     StripPrefix(StripPrefixError),
+    #[error("Unable to get RwLock")]
+    RwLock,
 }
 
 impl From<std::io::Error> for VaultError {

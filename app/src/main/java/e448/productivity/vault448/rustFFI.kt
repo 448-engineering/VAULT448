@@ -29,6 +29,8 @@ import java.nio.ByteOrder
 import java.nio.CharBuffer
 import java.nio.charset.CodingErrorAction
 import java.util.concurrent.ConcurrentHashMap
+import java.util.concurrent.atomic.AtomicBoolean
+import java.util.concurrent.atomic.AtomicLong
 import kotlin.coroutines.resume
 import kotlinx.coroutines.CancellableContinuation
 import kotlinx.coroutines.suspendCancellableCoroutine
@@ -377,10 +379,28 @@ internal interface _UniFFILib : Library {
         }
     }
 
+    fun uniffi_vault448_native_fn_free_internalstoragedetailsffi(`ptr`: Pointer,_uniffi_out_err: RustCallStatus, 
+    ): Unit
+    fun uniffi_vault448_native_fn_constructor_internalstoragedetailsffi_new(_uniffi_out_err: RustCallStatus, 
+    ): Pointer
+    fun uniffi_vault448_native_fn_method_internalstoragedetailsffi_add_description(`ptr`: Pointer,`volumeDescription`: RustBuffer.ByValue,_uniffi_out_err: RustCallStatus, 
+    ): Unit
+    fun uniffi_vault448_native_fn_method_internalstoragedetailsffi_add_free_space(`ptr`: Pointer,`freeSpace`: Long,_uniffi_out_err: RustCallStatus, 
+    ): Unit
+    fun uniffi_vault448_native_fn_method_internalstoragedetailsffi_add_path(`ptr`: Pointer,`path`: RustBuffer.ByValue,_uniffi_out_err: RustCallStatus, 
+    ): Unit
+    fun uniffi_vault448_native_fn_method_internalstoragedetailsffi_add_total_space(`ptr`: Pointer,`totalSpace`: Long,_uniffi_out_err: RustCallStatus, 
+    ): Unit
+    fun uniffi_vault448_native_fn_method_internalstoragedetailsffi_compute(`ptr`: Pointer,_uniffi_out_err: RustCallStatus, 
+    ): Unit
+    fun uniffi_vault448_native_fn_method_internalstoragedetailsffi_get(`ptr`: Pointer,_uniffi_out_err: RustCallStatus, 
+    ): RustBuffer.ByValue
     fun uniffi_vault448_native_fn_func_ffi_version(_uniffi_out_err: RustCallStatus, 
     ): RustBuffer.ByValue
     fun uniffi_vault448_native_fn_func_init(`path`: RustBuffer.ByValue,
     ): Pointer
+    fun uniffi_vault448_native_fn_func_init_internal_storage_details(_uniffi_out_err: RustCallStatus, 
+    ): RustBuffer.ByValue
     fun uniffi_vault448_native_fn_func_to_human_format(`value`: Long,`decimalPlaces`: Long,_uniffi_out_err: RustCallStatus, 
     ): RustBuffer.ByValue
     fun ffi_vault448_native_rustbuffer_alloc(`size`: Int,_uniffi_out_err: RustCallStatus, 
@@ -501,7 +521,23 @@ internal interface _UniFFILib : Library {
     ): Short
     fun uniffi_vault448_native_checksum_func_init(
     ): Short
+    fun uniffi_vault448_native_checksum_func_init_internal_storage_details(
+    ): Short
     fun uniffi_vault448_native_checksum_func_to_human_format(
+    ): Short
+    fun uniffi_vault448_native_checksum_method_internalstoragedetailsffi_add_description(
+    ): Short
+    fun uniffi_vault448_native_checksum_method_internalstoragedetailsffi_add_free_space(
+    ): Short
+    fun uniffi_vault448_native_checksum_method_internalstoragedetailsffi_add_path(
+    ): Short
+    fun uniffi_vault448_native_checksum_method_internalstoragedetailsffi_add_total_space(
+    ): Short
+    fun uniffi_vault448_native_checksum_method_internalstoragedetailsffi_compute(
+    ): Short
+    fun uniffi_vault448_native_checksum_method_internalstoragedetailsffi_get(
+    ): Short
+    fun uniffi_vault448_native_checksum_constructor_internalstoragedetailsffi_new(
     ): Short
     fun ffi_vault448_native_uniffi_contract_version(
     ): Int
@@ -526,7 +562,31 @@ private fun uniffiCheckApiChecksums(lib: _UniFFILib) {
     if (lib.uniffi_vault448_native_checksum_func_init() != 35635.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
+    if (lib.uniffi_vault448_native_checksum_func_init_internal_storage_details() != 21518.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
     if (lib.uniffi_vault448_native_checksum_func_to_human_format() != 33013.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_vault448_native_checksum_method_internalstoragedetailsffi_add_description() != 62368.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_vault448_native_checksum_method_internalstoragedetailsffi_add_free_space() != 24537.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_vault448_native_checksum_method_internalstoragedetailsffi_add_path() != 48145.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_vault448_native_checksum_method_internalstoragedetailsffi_add_total_space() != 7468.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_vault448_native_checksum_method_internalstoragedetailsffi_compute() != 27314.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_vault448_native_checksum_method_internalstoragedetailsffi_get() != 12216.toShort()) {
+        throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
+    }
+    if (lib.uniffi_vault448_native_checksum_constructor_internalstoragedetailsffi_new() != 44786.toShort()) {
         throw RuntimeException("UniFFI API checksum mismatch: try cleaning and rebuilding your project")
     }
 }
@@ -670,6 +730,299 @@ public object FfiConverterString: FfiConverter<String, RustBuffer.ByValue> {
         val byteBuf = toUtf8(value)
         buf.putInt(byteBuf.limit())
         buf.put(byteBuf)
+    }
+}
+
+
+// Interface implemented by anything that can contain an object reference.
+//
+// Such types expose a `destroy()` method that must be called to cleanly
+// dispose of the contained objects. Failure to call this method may result
+// in memory leaks.
+//
+// The easiest way to ensure this method is called is to use the `.use`
+// helper method to execute a block and destroy the object at the end.
+interface Disposable {
+    fun destroy()
+    companion object {
+        fun destroy(vararg args: Any?) {
+            args.filterIsInstance<Disposable>()
+                .forEach(Disposable::destroy)
+        }
+    }
+}
+
+inline fun <T : Disposable?, R> T.use(block: (T) -> R) =
+    try {
+        block(this)
+    } finally {
+        try {
+            // N.B. our implementation is on the nullable type `Disposable?`.
+            this?.destroy()
+        } catch (e: Throwable) {
+            // swallow
+        }
+    }
+
+// The base class for all UniFFI Object types.
+//
+// This class provides core operations for working with the Rust `Arc<T>` pointer to
+// the live Rust struct on the other side of the FFI.
+//
+// There's some subtlety here, because we have to be careful not to operate on a Rust
+// struct after it has been dropped, and because we must expose a public API for freeing
+// the Kotlin wrapper object in lieu of reliable finalizers. The core requirements are:
+//
+//   * Each `FFIObject` instance holds an opaque pointer to the underlying Rust struct.
+//     Method calls need to read this pointer from the object's state and pass it in to
+//     the Rust FFI.
+//
+//   * When an `FFIObject` is no longer needed, its pointer should be passed to a
+//     special destructor function provided by the Rust FFI, which will drop the
+//     underlying Rust struct.
+//
+//   * Given an `FFIObject` instance, calling code is expected to call the special
+//     `destroy` method in order to free it after use, either by calling it explicitly
+//     or by using a higher-level helper like the `use` method. Failing to do so will
+//     leak the underlying Rust struct.
+//
+//   * We can't assume that calling code will do the right thing, and must be prepared
+//     to handle Kotlin method calls executing concurrently with or even after a call to
+//     `destroy`, and to handle multiple (possibly concurrent!) calls to `destroy`.
+//
+//   * We must never allow Rust code to operate on the underlying Rust struct after
+//     the destructor has been called, and must never call the destructor more than once.
+//     Doing so may trigger memory unsafety.
+//
+// If we try to implement this with mutual exclusion on access to the pointer, there is the
+// possibility of a race between a method call and a concurrent call to `destroy`:
+//
+//    * Thread A starts a method call, reads the value of the pointer, but is interrupted
+//      before it can pass the pointer over the FFI to Rust.
+//    * Thread B calls `destroy` and frees the underlying Rust struct.
+//    * Thread A resumes, passing the already-read pointer value to Rust and triggering
+//      a use-after-free.
+//
+// One possible solution would be to use a `ReadWriteLock`, with each method call taking
+// a read lock (and thus allowed to run concurrently) and the special `destroy` method
+// taking a write lock (and thus blocking on live method calls). However, we aim not to
+// generate methods with any hidden blocking semantics, and a `destroy` method that might
+// block if called incorrectly seems to meet that bar.
+//
+// So, we achieve our goals by giving each `FFIObject` an associated `AtomicLong` counter to track
+// the number of in-flight method calls, and an `AtomicBoolean` flag to indicate whether `destroy`
+// has been called. These are updated according to the following rules:
+//
+//    * The initial value of the counter is 1, indicating a live object with no in-flight calls.
+//      The initial value for the flag is false.
+//
+//    * At the start of each method call, we atomically check the counter.
+//      If it is 0 then the underlying Rust struct has already been destroyed and the call is aborted.
+//      If it is nonzero them we atomically increment it by 1 and proceed with the method call.
+//
+//    * At the end of each method call, we atomically decrement and check the counter.
+//      If it has reached zero then we destroy the underlying Rust struct.
+//
+//    * When `destroy` is called, we atomically flip the flag from false to true.
+//      If the flag was already true we silently fail.
+//      Otherwise we atomically decrement and check the counter.
+//      If it has reached zero then we destroy the underlying Rust struct.
+//
+// Astute readers may observe that this all sounds very similar to the way that Rust's `Arc<T>` works,
+// and indeed it is, with the addition of a flag to guard against multiple calls to `destroy`.
+//
+// The overall effect is that the underlying Rust struct is destroyed only when `destroy` has been
+// called *and* all in-flight method calls have completed, avoiding violating any of the expectations
+// of the underlying Rust code.
+//
+// In the future we may be able to replace some of this with automatic finalization logic, such as using
+// the new "Cleaner" functionaility in Java 9. The above scheme has been designed to work even if `destroy` is
+// invoked by garbage-collection machinery rather than by calling code (which by the way, it's apparently also
+// possible for the JVM to finalize an object while there is an in-flight call to one of its methods [1],
+// so there would still be some complexity here).
+//
+// Sigh...all of this for want of a robust finalization mechanism.
+//
+// [1] https://stackoverflow.com/questions/24376768/can-java-finalize-an-object-when-it-is-still-in-scope/24380219
+//
+abstract class FFIObject(
+    protected val pointer: Pointer
+): Disposable, AutoCloseable {
+
+    private val wasDestroyed = AtomicBoolean(false)
+    private val callCounter = AtomicLong(1)
+
+    open protected fun freeRustArcPtr() {
+        // To be overridden in subclasses.
+    }
+
+    override fun destroy() {
+        // Only allow a single call to this method.
+        // TODO: maybe we should log a warning if called more than once?
+        if (this.wasDestroyed.compareAndSet(false, true)) {
+            // This decrement always matches the initial count of 1 given at creation time.
+            if (this.callCounter.decrementAndGet() == 0L) {
+                this.freeRustArcPtr()
+            }
+        }
+    }
+
+    @Synchronized
+    override fun close() {
+        this.destroy()
+    }
+
+    internal inline fun <R> callWithPointer(block: (ptr: Pointer) -> R): R {
+        // Check and increment the call counter, to keep the object alive.
+        // This needs a compare-and-set retry loop in case of concurrent updates.
+        do {
+            val c = this.callCounter.get()
+            if (c == 0L) {
+                throw IllegalStateException("${this.javaClass.simpleName} object has already been destroyed")
+            }
+            if (c == Long.MAX_VALUE) {
+                throw IllegalStateException("${this.javaClass.simpleName} call counter would overflow")
+            }
+        } while (! this.callCounter.compareAndSet(c, c + 1L))
+        // Now we can safely do the method call without the pointer being freed concurrently.
+        try {
+            return block(this.pointer)
+        } finally {
+            // This decrement always matches the increment we performed above.
+            if (this.callCounter.decrementAndGet() == 0L) {
+                this.freeRustArcPtr()
+            }
+        }
+    }
+}
+
+public interface InternalStorageDetailsFfiInterface {
+    @Throws(OutcomeException::class)
+    fun `addDescription`(`volumeDescription`: String)@Throws(OutcomeException::class)
+    fun `addFreeSpace`(`freeSpace`: ULong)@Throws(OutcomeException::class)
+    fun `addPath`(`path`: String)@Throws(OutcomeException::class)
+    fun `addTotalSpace`(`totalSpace`: ULong)@Throws(OutcomeException::class)
+    fun `compute`()@Throws(OutcomeException::class)
+    fun `get`(): InternalStorageDetails
+    companion object
+}
+
+class InternalStorageDetailsFfi(
+    pointer: Pointer
+) : FFIObject(pointer), InternalStorageDetailsFfiInterface {
+    constructor() :
+        this(
+    rustCall() { _status ->
+    _UniFFILib.INSTANCE.uniffi_vault448_native_fn_constructor_internalstoragedetailsffi_new(_status)
+})
+
+    /**
+     * Disconnect the object from the underlying Rust object.
+     *
+     * It can be called more than once, but once called, interacting with the object
+     * causes an `IllegalStateException`.
+     *
+     * Clients **must** call this method once done with the object, or cause a memory leak.
+     */
+    override protected fun freeRustArcPtr() {
+        rustCall() { status ->
+            _UniFFILib.INSTANCE.uniffi_vault448_native_fn_free_internalstoragedetailsffi(this.pointer, status)
+        }
+    }
+
+    
+    @Throws(OutcomeException::class)override fun `addDescription`(`volumeDescription`: String) =
+        callWithPointer {
+    rustCallWithError(OutcomeException) { _status ->
+    _UniFFILib.INSTANCE.uniffi_vault448_native_fn_method_internalstoragedetailsffi_add_description(it,
+        FfiConverterString.lower(`volumeDescription`),
+        _status)
+}
+        }
+    
+    
+    
+    @Throws(OutcomeException::class)override fun `addFreeSpace`(`freeSpace`: ULong) =
+        callWithPointer {
+    rustCallWithError(OutcomeException) { _status ->
+    _UniFFILib.INSTANCE.uniffi_vault448_native_fn_method_internalstoragedetailsffi_add_free_space(it,
+        FfiConverterULong.lower(`freeSpace`),
+        _status)
+}
+        }
+    
+    
+    
+    @Throws(OutcomeException::class)override fun `addPath`(`path`: String) =
+        callWithPointer {
+    rustCallWithError(OutcomeException) { _status ->
+    _UniFFILib.INSTANCE.uniffi_vault448_native_fn_method_internalstoragedetailsffi_add_path(it,
+        FfiConverterString.lower(`path`),
+        _status)
+}
+        }
+    
+    
+    
+    @Throws(OutcomeException::class)override fun `addTotalSpace`(`totalSpace`: ULong) =
+        callWithPointer {
+    rustCallWithError(OutcomeException) { _status ->
+    _UniFFILib.INSTANCE.uniffi_vault448_native_fn_method_internalstoragedetailsffi_add_total_space(it,
+        FfiConverterULong.lower(`totalSpace`),
+        _status)
+}
+        }
+    
+    
+    
+    @Throws(OutcomeException::class)override fun `compute`() =
+        callWithPointer {
+    rustCallWithError(OutcomeException) { _status ->
+    _UniFFILib.INSTANCE.uniffi_vault448_native_fn_method_internalstoragedetailsffi_compute(it,
+        
+        _status)
+}
+        }
+    
+    
+    
+    @Throws(OutcomeException::class)override fun `get`(): InternalStorageDetails =
+        callWithPointer {
+    rustCallWithError(OutcomeException) { _status ->
+    _UniFFILib.INSTANCE.uniffi_vault448_native_fn_method_internalstoragedetailsffi_get(it,
+        
+        _status)
+}
+        }.let {
+            FfiConverterTypeInternalStorageDetails.lift(it)
+        }
+    
+    
+
+    
+    companion object
+    
+}
+
+public object FfiConverterTypeInternalStorageDetailsFfi: FfiConverter<InternalStorageDetailsFfi, Pointer> {
+    override fun lower(value: InternalStorageDetailsFfi): Pointer = value.callWithPointer { it }
+
+    override fun lift(value: Pointer): InternalStorageDetailsFfi {
+        return InternalStorageDetailsFfi(value)
+    }
+
+    override fun read(buf: ByteBuffer): InternalStorageDetailsFfi {
+        // The Rust code always writes pointers as 8 bytes, and will
+        // fail to compile if they don't fit.
+        return lift(Pointer(buf.getLong()))
+    }
+
+    override fun allocationSize(value: InternalStorageDetailsFfi) = 8
+
+    override fun write(value: InternalStorageDetailsFfi, buf: ByteBuffer) {
+        // The Rust code always expects pointers written as 8 bytes,
+        // and will fail to compile if they don't fit.
+        buf.putLong(Pointer.nativeValue(lower(value)))
     }
 }
 
@@ -1100,6 +1453,52 @@ public object FfiConverterTypeFfiFsMetadata: FfiConverterRustBuffer<FfiFsMetadat
 
 
 
+data class InternalStorageDetails (
+    var `volumeDescription`: String, 
+    var `path`: String, 
+    var `totalSpace`: ULong, 
+    var `usedSpace`: ULong, 
+    var `freeSpace`: ULong, 
+    var `percentageUsed`: ULong
+) {
+    
+    companion object
+}
+
+public object FfiConverterTypeInternalStorageDetails: FfiConverterRustBuffer<InternalStorageDetails> {
+    override fun read(buf: ByteBuffer): InternalStorageDetails {
+        return InternalStorageDetails(
+            FfiConverterString.read(buf),
+            FfiConverterString.read(buf),
+            FfiConverterULong.read(buf),
+            FfiConverterULong.read(buf),
+            FfiConverterULong.read(buf),
+            FfiConverterULong.read(buf),
+        )
+    }
+
+    override fun allocationSize(value: InternalStorageDetails) = (
+            FfiConverterString.allocationSize(value.`volumeDescription`) +
+            FfiConverterString.allocationSize(value.`path`) +
+            FfiConverterULong.allocationSize(value.`totalSpace`) +
+            FfiConverterULong.allocationSize(value.`usedSpace`) +
+            FfiConverterULong.allocationSize(value.`freeSpace`) +
+            FfiConverterULong.allocationSize(value.`percentageUsed`)
+    )
+
+    override fun write(value: InternalStorageDetails, buf: ByteBuffer) {
+            FfiConverterString.write(value.`volumeDescription`, buf)
+            FfiConverterString.write(value.`path`, buf)
+            FfiConverterULong.write(value.`totalSpace`, buf)
+            FfiConverterULong.write(value.`usedSpace`, buf)
+            FfiConverterULong.write(value.`freeSpace`, buf)
+            FfiConverterULong.write(value.`percentageUsed`, buf)
+    }
+}
+
+
+
+
 
 sealed class OutcomeException: Exception() {
     // Each variant is a nested class
@@ -1390,6 +1789,14 @@ suspend fun `init`(`path`: String) : DirOutcome {
         NullCallStatusErrorHandler,
     )
 }
+
+fun `initInternalStorageDetails`(): InternalStorageDetails {
+    return FfiConverterTypeInternalStorageDetails.lift(
+    rustCall() { _status ->
+    _UniFFILib.INSTANCE.uniffi_vault448_native_fn_func_init_internal_storage_details(_status)
+})
+}
+
 
 fun `toHumanFormat`(`value`: ULong, `decimalPlaces`: ULong): String {
     return FfiConverterString.lift(

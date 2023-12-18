@@ -40,8 +40,7 @@ import e448.productivity.vault448.ui.theme.themeColorLight
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
-fun RootUI(nativeClass: Vault448Native) {
-    val internalStorageDetails = getStorageVolumesAccessState(LocalContext.current)
+fun RootUI(nativeClass: Vault448Native, details: MutableState<InternalStorageDetails>) {
 
     val fsOutcome = remember {
         mutableStateOf<DirOutcome>(
@@ -52,8 +51,9 @@ fun RootUI(nativeClass: Vault448Native) {
         )
     }
 
+
     LaunchedEffect(key1 = true) {
-        val app = init(path = internalStorageDetails.path)
+        val app = init(path = details.value.path)
         fsOutcome.value = app
     }
 
@@ -65,7 +65,7 @@ fun RootUI(nativeClass: Vault448Native) {
     CenteredColumn {
         RootModalBottomSheet(isSheetOpen, nativeClass)
         FullRowCenteredTextLarge(
-            "FILE  MANAGER",
+            "VAULT WORKSPACE",
             modifier = Modifier.clickable {
                 isSheetOpen.value = true
             }
@@ -76,11 +76,11 @@ fun RootUI(nativeClass: Vault448Native) {
         ) {
             InternalStorageOverview(
                 Modifier.weight(3f),
-                internalStorageDetails = internalStorageDetails
+                internalStorageDetails = details
             )
             CustomSpacer(20.dp)
             Column(modifier = Modifier.weight(1f)) {
-                InternalStorageCalc(internalStorageDetails = internalStorageDetails)
+                InternalStorageCalc(internalStorageDetails = details)
                 CustomSpacer(dp = 1.dp, bottom = 10.dp)
                 FilesCalc(outcome = fsOutcome)
             }
@@ -146,7 +146,7 @@ fun RootModalBottomSheet(isSheetOpen: MutableState<Boolean>, nativeClass: Vault4
 @Composable
 fun InternalStorageOverview(
     modifier: Modifier = Modifier,
-    internalStorageDetails: InternalStorageDetails
+    internalStorageDetails: MutableState<InternalStorageDetails>
 ) {
 
     Column(
@@ -170,12 +170,12 @@ fun InternalStorageOverview(
             )
             CustomSpacer(bottom = 5.dp)
             ExpansivaText(
-                "${internalStorageDetails.percentageUsed}%",
+                "${internalStorageDetails.value.percentageUsed}%",
                 fontSize = 40.sp,
                 fontWeight = FontWeight.Normal
             )
             CustomSpacer(100.dp, bottom = 5.dp)
-            Text(internalStorageDetails.path)
+            Text(internalStorageDetails.value.path)
         }
     }
 }
@@ -183,7 +183,7 @@ fun InternalStorageOverview(
 @Composable
 fun InternalStorageCalc(
     modifier: Modifier = Modifier,
-    internalStorageDetails: InternalStorageDetails
+    internalStorageDetails:  MutableState<InternalStorageDetails>
 ) {
     val gibTextSize = 10.sp
 
@@ -210,14 +210,14 @@ fun InternalStorageCalc(
                 verticalArrangement = Arrangement.Center
             ) {
                 ExpansivaText(
-                    textContent = "${internalStorageDetails.usedSpace} GiB",
+                    textContent = "${internalStorageDetails.value.usedSpace} GiB",
                     fontSize = gibTextSize
                 )
                 CustomSpacer(100.dp, bottom = 2.dp)
                 Divider(color = themeColorLight, thickness = 1.dp)
                 CustomSpacer(100.dp, bottom = 4.dp)
                 ExpansivaText(
-                    textContent = "${internalStorageDetails.totalSpace} GiB",
+                    textContent = "${internalStorageDetails.value.totalSpace} GiB",
                     fontSize = gibTextSize
                 )
             }

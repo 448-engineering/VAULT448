@@ -1,6 +1,8 @@
-use crate::{App, DirOutcome, VaultError};
+use crate::{fs_ops::InternalStorageDetails, App, DirOutcome, VaultError};
 use core::fmt;
 use once_cell::sync::OnceCell;
+
+pub(crate) static APP: OnceCell<App> = OnceCell::new();
 
 #[uniffi::export]
 pub fn ffi_version() -> String {
@@ -12,7 +14,11 @@ pub async fn init(path: String) -> DirOutcome {
     App::init(&path).await
 }
 
-pub(crate) static APP: OnceCell<App> = OnceCell::new();
+pub fn update_details(details: InternalStorageDetails) {
+    if let Some(app) = APP.get_mut() {
+        app.details = details;
+    }
+}
 
 #[derive(Debug, uniffi::Error)]
 pub enum OutcomeError {

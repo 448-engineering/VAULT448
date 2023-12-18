@@ -1,4 +1,7 @@
-use crate::{fs_ops::ConversionUtils, CurrentDirMetadata, VaultResult};
+use crate::{
+    fs_ops::{ConversionUtils, InternalStorageDetails},
+    CurrentDirMetadata, VaultResult,
+};
 use camino::{Utf8Path, Utf8PathBuf};
 
 #[derive(Debug, Default, uniffi::Record)]
@@ -8,8 +11,7 @@ pub struct DirOutcome {
 }
 
 pub struct App {
-    user_dir: Utf8PathBuf,
-    user_dir_metadata: CurrentDirMetadata,
+    pub details: InternalStorageDetails,
 }
 
 impl App {
@@ -29,13 +31,5 @@ impl App {
         }
 
         outcome
-    }
-
-    pub fn user_dir(&self) -> &Utf8Path {
-        self.user_dir.as_ref()
-    }
-
-    pub fn user_dir_metadata(&self) -> &CurrentDirMetadata {
-        &self.user_dir_metadata
     }
 }
