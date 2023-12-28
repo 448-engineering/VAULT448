@@ -61,6 +61,7 @@ dependencies {
     implementation("androidx.compose.ui:ui-tooling-preview")
     implementation("androidx.compose.material3:material3")
     implementation ("androidx.core:core-splashscreen:1.1.0-alpha02")
+    implementation ("androidx.work:work-runtime-ktx:2.9.0")
     implementation ("net.java.dev.jna:jna:5.13.0@aar")
     testImplementation("junit:junit:4.13.2")
     androidTestImplementation("androidx.test.ext:junit:1.1.5")

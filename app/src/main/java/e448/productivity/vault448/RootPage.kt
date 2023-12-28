@@ -31,7 +31,6 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import e448.productivity.vault448.*
 import e448.productivity.vault448.ui.theme.ExpansivaText
 import e448.productivity.vault448.ui.theme.FullRowCenteredTextLarge
 import e448.productivity.vault448.ui.theme.themeColorDarker

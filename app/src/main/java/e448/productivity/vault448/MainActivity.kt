@@ -19,6 +19,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.core.app.ActivityCompat
 import e448.productivity.vault448.ui.theme.VAULT448Theme
 
 
@@ -28,6 +29,14 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
 
         val nativeClass = Vault448Native()
+
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            ActivityCompat.requestPermissions(
+                this,
+                arrayOf(android.Manifest.permission.POST_NOTIFICATIONS),
+                0
+            )
+        }
 
         setContent {
             VAULT448Theme {
@@ -40,11 +49,14 @@ class MainActivity : ComponentActivity() {
 
                     IsStorageManager(isExternalStorageManager,nativeClass)
 
+
                 }
             }
         }
     }
 }
+
+
 
 @Composable
 fun IsStorageManager(isStorageManagerListener: MutableState<Boolean>, nativeClass: Vault448Native) {
