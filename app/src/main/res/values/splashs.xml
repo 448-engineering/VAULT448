@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="utf-8" ?>
-<resources>
-    <style name="Theme.App.CustomSplashTheme" parent="Theme.SplashScreen">
-        <item name="windowSplashScreenAnimatedIcon">@drawable/vault448_logo</item>
-        <item name="windowSplashScreenBackground">@color/black</item>
-        <item name="postSplashScreenTheme">@style/Theme.VAULT448</item>
-    </style>
-</resources>

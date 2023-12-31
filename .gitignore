@@ -46,9 +46,17 @@ local.properties
 /android/app/profile
 /android/app/release
 
+/Android/android/app/debug
+/Android/android/app/profile
+/Android/android/app/release
+
+/Android/app/build/
 
 /Vault448Native/target
 /Vault448Native/Cargo.lock
 /Vault448Native/logs
 /Vault448Native/.vscode
 /Vault448Native/uniffi_out
+
+/target
+Cargo.lock

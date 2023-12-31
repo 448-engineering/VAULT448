@@ -1,3 +1,0 @@
-[bindings.kotlin]
-package_name = "e448.productivity.vault448"
-cdylib_name = "vault448_native"
