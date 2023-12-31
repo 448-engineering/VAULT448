@@ -1,0 +1,24 @@
+[package]
+name = "vault448-native"
+version = "0.3.0-alpha1"
+authors = ["448 ENGINEERING Developers <superuser@448.africa>"]
+license = "LicenseRef-BSL-1.1"
+description = "Native code for Vault448 File Manager"
+publish = false
+edition = "2021"
+
+[lib]
+name = "vault448_native"
+crate-type = ["cdylib", "staticlib"]
+
+[[bin]]
+name = "uniffi-bindgen"
+path = "uniffi-bindgen.rs"
+
+[dependencies]
+uniffi = { git = "https://github.com/mozilla/uniffi-rs/", rev = "a3403ac" }
+vault448-common = { path = "../../Vault448-Common" }
+once_cell.workspace = true
+human_format.workspace = true
+dir-meta.workspace = true
+camino.workspace = true
