@@ -16,7 +16,7 @@ name = "uniffi-bindgen"
 path = "uniffi-bindgen.rs"
 
 [dependencies]
-uniffi = { git = "https://github.com/mozilla/uniffi-rs/", rev = "a3403ac" }
+uniffi = { git = "https://github.com/mozilla/uniffi-rs/", rev = "133732d" }
 vault448-common = { path = "../../Vault448-Common" }
 once_cell.workspace = true
 human_format.workspace = true
