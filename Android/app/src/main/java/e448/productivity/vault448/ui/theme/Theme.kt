@@ -18,31 +18,31 @@ import androidx.compose.material3.darkColorScheme
 import androidx.compose.material3.lightColorScheme
 
 private val DarkColorScheme = darkColorScheme(
-    primary = themeColorDarker,
-    secondary = themeColorDark,
-    tertiary = themeColorWhite,
+    primary = v448ColorChineseBlack,
+    secondary = v448ColorChineseBlack,
+    tertiary = v448ColorWhite,
 
-    background = themeColorDark,
-    surface = themeColorDark,
-    onPrimary = themeColorWhite,
-    onSecondary = themeColorWhite,
-    onTertiary = themeColorDarker,
-    onBackground = themeColorDarker,
-    onSurface = themeColorWhite,
+    background = v448ColorSmokyBlack,
+    surface = v448ColorChineseBlack,
+    onPrimary = v448ColorWhite,
+    onSecondary = v448ColorSmokyBlack,
+    onTertiary = v448ColorChineseBlack,
+    onBackground = v448ColorWhite,
+    onSurface = v448ColorWhite,
 )
 
 private val LightColorScheme = lightColorScheme(
-    primary = themeColorWhite,
-    secondary = themeColorWhiter,
-    tertiary = themeColorDarker,
+    primary = v448ColorWhite,
+    secondary = v448ColorChineseBlack,
+    tertiary = v448ColorChineseBlack,
 
-    background = themeColorWhite,
-    surface = themeColorWhite,
-    onPrimary = themeColorDarker,
-    onSecondary = themeColorDarker,
-    onTertiary = themeColorWhite,
-    onBackground = themeColorWhite,
-    onSurface = themeColorWhite,
+    background = v448ColorWhite,
+    surface = v448ColorWhite,
+    onPrimary = v448ColorChineseBlack,
+    onSecondary = v448ColorWhite,
+    onTertiary = v448ColorWhite,
+    onBackground = v448ColorChineseBlack,
+    onSurface = v448ColorChineseBlack,
 )
 
 @Composable
@@ -56,7 +56,7 @@ fun VAULT448Theme(
 
     MaterialTheme(
         colorScheme = DarkColorScheme,
-        typography = typography,
+        typography = Typography,
         content = content
     )
 }
@@ -122,7 +122,7 @@ fun VAULT448Theme(
 
     MaterialTheme(
         colorScheme = colorScheme,
-        typography = typography,
+        typography = Typography,
         content = content
     )
 }

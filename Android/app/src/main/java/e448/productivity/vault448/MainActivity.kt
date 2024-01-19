@@ -1,25 +1,23 @@
 package e448.productivity.vault448
 
 
+import android.content.Context
 import android.os.Build
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
-import androidx.annotation.RequiresApi
-import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Scaffold
+import androidx.compose.foundation.layout.safeDrawingPadding
 import androidx.compose.material3.Surface
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.MutableState
+import androidx.compose.material3.Text
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.core.app.ActivityCompat
+import e448.productivity.vault448.initializer.StorageManagerPermissionsRequired
+import e448.productivity.vault448.initializer.checkIsStorageManager
 import e448.productivity.vault448.ui.theme.VAULT448Theme
 
 
@@ -28,35 +26,55 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         super.onCreate(savedInstanceState)
 
-        val nativeClass = Vault448Native()
-
-        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
             ActivityCompat.requestPermissions(
-                this,
-                arrayOf(android.Manifest.permission.POST_NOTIFICATIONS),
-                0
+                this, arrayOf(android.Manifest.permission.POST_NOTIFICATIONS), 0
             )
         }
+
+        val currentContext: Context = this
+
 
         setContent {
             VAULT448Theme {
                 // A surface container using the 'background' color from the theme
                 Surface(
-                    modifier = Modifier.fillMaxSize(), color = MaterialTheme.colorScheme.background
+                    modifier = Modifier.fillMaxSize(),
                 ) {
+
+
                     val isExternalStorageManager =
-                        remember { mutableStateOf(checkIsExternalStorageManager()) }
+                        remember { mutableStateOf(checkIsStorageManager(currentContext)) }
 
-                    IsStorageManager(isExternalStorageManager,nativeClass)
 
+                    Box(
+                        Modifier.safeDrawingPadding()
+                    ) {
+                        if (!isExternalStorageManager.value) {
+                            StorageManagerPermissionsRequired(
+                                storageManagerListener = isExternalStorageManager
+                            )
+
+
+                        } else {
+                            Text(text = "Is External Storage Manager")
+
+                        }
+                    }
 
                 }
             }
         }
     }
+
+}/*
+@Composable
+fun SecureElementCheck() {
+    val isSecureElementPresent = remember {
+        OpenMobileAPI.isSecureElementPresent()
+    }
+    Text(text = if (isSecureElementPresent) "This device has a secure element" else "This device does not have a secure element")
 }
-
-
 
 @Composable
 fun IsStorageManager(isStorageManagerListener: MutableState<Boolean>, nativeClass: Vault448Native) {
@@ -68,6 +86,7 @@ fun IsStorageManager(isStorageManagerListener: MutableState<Boolean>, nativeClas
         ) {
             @RequiresApi(Build.VERSION_CODES.R) if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
                 if (isStorageManagerListener.value) {
+                    Foo(LocalContext.current)
                     RootUI(nativeClass)
                 } else {
                     RequestExternalStorageDirPermission(isStorageManagerListener)
@@ -79,3 +98,4 @@ fun IsStorageManager(isStorageManagerListener: MutableState<Boolean>, nativeClas
     }
 }
 
+*/

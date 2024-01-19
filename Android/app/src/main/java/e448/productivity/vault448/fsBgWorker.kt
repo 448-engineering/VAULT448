@@ -28,7 +28,7 @@ class BootCompletedReceiver : BroadcastReceiver() {
         if (intent?.action == Intent.ACTION_BOOT_COMPLETED) {
             println("Hello World, Boot Completed")
 
-            Intent(context, FsListenerService::class.java).also {
+            /*Intent(context, FsListenerService::class.java).also {
                 it.action = FsListenerService.FsActions.START.toString()
                 if (context != null) {
                     ContextCompat.startForegroundService(context, it)
@@ -40,7 +40,7 @@ class BootCompletedReceiver : BroadcastReceiver() {
                 ContextCompat.startForegroundService(context, serviceIntent)
             } else {
                 println("ERROR: The Context is null")
-            }
+            }*/
         }
     }
 }
@@ -82,7 +82,8 @@ class FsListenerService : Service() {
         Log.d("DBG", isStorageManager.toString())
 
         if (isStorageManager) {
-            if (initAppStatic(Environment.getExternalStorageDirectory().absolutePath)) {
+            Log.d("DBG", "YES IS STORAGE MANAGER")
+            /*if (initAppStatic(Environment.getExternalStorageDirectory().absolutePath)) {
                 ////////////////////////
 
                     val app = currentDirMetadata()
@@ -107,7 +108,7 @@ class FsListenerService : Service() {
                     .build()
 
                 startForeground(FS_SERVICE_ID, notification)
-            }
+            }*/
         }
 
 
@@ -139,8 +140,8 @@ class FsNotificationChannel : Application() {
 
 }
 
-/*
 
+/*
 class FsListenerService: Service() {
     override fun onBind(intent: Intent?): IBinder? {
         return null
@@ -169,5 +170,4 @@ class FsListenerService: Service() {
         Log.d("Stopped","Service Stopped")
         super.onDestroy()
     }
-}
- */
+}*/
