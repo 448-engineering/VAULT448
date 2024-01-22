@@ -42,24 +42,24 @@ val Typography = Typography(
 
     titleLarge = TextStyle(
         fontFamily = expansivaFont,
-        fontWeight = FontWeight.Normal,
-        fontSize = 32.sp,
+        fontWeight = FontWeight.Bold,
+        fontSize = 24.sp,
         lineHeight = 28.sp,
         letterSpacing = 0.sp
     ),
 
     titleMedium = TextStyle(
         fontFamily = expansivaFont,
-        fontWeight = FontWeight.Normal,
-        fontSize = 24.sp,
+        fontWeight = FontWeight.Bold,
+        fontSize = 20.sp,
         lineHeight = 28.sp,
         letterSpacing = 0.sp
     ),
 
     titleSmall = TextStyle(
         fontFamily = expansivaFont,
-        fontWeight = FontWeight.Normal,
-        fontSize = 20.sp,
+        fontWeight = FontWeight.Bold,
+        fontSize = 16.sp,
         lineHeight = 28.sp,
         letterSpacing = 0.sp
     )
