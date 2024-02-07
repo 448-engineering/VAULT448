@@ -7,6 +7,7 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.safeDrawingPadding
@@ -15,6 +16,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.core.app.ActivityCompat
 import e448.productivity.vault448.initializer.StorageManagerPermissionsRequired
 import e448.productivity.vault448.initializer.checkIsStorageManager
@@ -33,6 +35,8 @@ class MainActivity : ComponentActivity() {
         }
 
         val currentContext: Context = this
+
+        val nativeClass = Vault448Native()
 
 
         setContent {
@@ -57,7 +61,7 @@ class MainActivity : ComponentActivity() {
 
 
                         } else {
-                            Text(text = "Is External Storage Manager")
+                            RootUI(nativeClass)
 
                         }
                     }

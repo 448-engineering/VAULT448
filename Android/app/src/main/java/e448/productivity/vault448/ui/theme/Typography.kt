@@ -8,6 +8,69 @@ import androidx.compose.ui.unit.sp
 
 // Set of Material typography styles to start with
 val Typography = Typography(
+    displayLarge = TextStyle(
+        fontFamily = expansivaFont,
+        fontWeight = FontWeight.Bold,
+        fontSize = 36.sp,
+        lineHeight = 24.sp,
+        letterSpacing = 0.5.sp
+    ),
+    displayMedium = TextStyle(
+        fontFamily = expansivaFont,
+        fontWeight = FontWeight.Bold,
+        fontSize = 32.sp,
+        lineHeight = 24.sp,
+        letterSpacing = 0.5.sp
+    ),
+    displaySmall = TextStyle(
+        fontFamily = expansivaFont,
+        fontWeight = FontWeight.Bold,
+        fontSize = 28.sp,
+        lineHeight = 24.sp,
+        letterSpacing = 0.5.sp
+    ),
+    titleLarge = TextStyle(
+        fontFamily = expansivaFont,
+        fontWeight = FontWeight.Bold,
+        fontSize = 24.sp,
+        lineHeight = 24.sp,
+        letterSpacing = 0.5.sp
+    ),
+    titleMedium = TextStyle(
+        fontFamily = expansivaFont,
+        fontWeight = FontWeight.Bold,
+        fontSize = 20.sp,
+        lineHeight = 24.sp,
+        letterSpacing = 0.5.sp
+    ),
+    titleSmall = TextStyle(
+        fontFamily = expansivaFont,
+        fontWeight = FontWeight.Bold,
+        fontSize = 16.sp,
+        lineHeight = 24.sp,
+        letterSpacing = 0.5.sp
+    ),
+    labelLarge = TextStyle(
+        fontFamily = expansivaFont,
+        fontWeight = FontWeight.Bold,
+        fontSize = 12.sp,
+        lineHeight = 24.sp,
+        letterSpacing = 0.5.sp
+    ),
+    labelMedium = TextStyle(
+        fontFamily = expansivaFont,
+        fontWeight = FontWeight.Bold,
+        fontSize = 8.sp,
+        lineHeight = 24.sp,
+        letterSpacing = 0.5.sp
+    ),
+    labelSmall = TextStyle(
+        fontFamily = expansivaFont,
+        fontWeight = FontWeight.Bold,
+        fontSize = 4.sp,
+        lineHeight = 24.sp,
+        letterSpacing = 0.5.sp
+    ),
     bodyLarge = TextStyle(
         fontFamily = carolloPlayscriptFont,
         fontWeight = FontWeight.Normal,
@@ -15,55 +78,20 @@ val Typography = Typography(
         lineHeight = 24.sp,
         letterSpacing = 0.5.sp
     ),
-
-    labelSmall = TextStyle(
+    bodyMedium = TextStyle(
         fontFamily = carolloPlayscriptFont,
-        fontWeight = FontWeight.Medium,
-        fontSize = 11.sp,
-        lineHeight = 16.sp,
+        fontWeight = FontWeight.Normal,
+        fontSize = 12.sp,
+        lineHeight = 24.sp,
         letterSpacing = 0.5.sp
     ),
-
-    labelMedium = TextStyle(
+    bodySmall = TextStyle(
         fontFamily = carolloPlayscriptFont,
-        fontWeight = FontWeight.Medium,
-        fontSize = 16.sp,
-        lineHeight = 16.sp,
+        fontWeight = FontWeight.Normal,
+        fontSize = 8.sp,
+        lineHeight = 24.sp,
         letterSpacing = 0.5.sp
     ),
-
-    labelLarge = TextStyle(
-        fontFamily = carolloPlayscriptFont,
-        fontWeight = FontWeight.Medium,
-        fontSize = 20.sp,
-        lineHeight = 16.sp,
-        letterSpacing = 0.5.sp
-    ),
-
-    titleLarge = TextStyle(
-        fontFamily = expansivaFont,
-        fontWeight = FontWeight.Bold,
-        fontSize = 24.sp,
-        lineHeight = 28.sp,
-        letterSpacing = 0.sp
-    ),
-
-    titleMedium = TextStyle(
-        fontFamily = expansivaFont,
-        fontWeight = FontWeight.Bold,
-        fontSize = 20.sp,
-        lineHeight = 28.sp,
-        letterSpacing = 0.sp
-    ),
-
-    titleSmall = TextStyle(
-        fontFamily = expansivaFont,
-        fontWeight = FontWeight.Bold,
-        fontSize = 16.sp,
-        lineHeight = 28.sp,
-        letterSpacing = 0.sp
-    )
-
 )
 
 /*

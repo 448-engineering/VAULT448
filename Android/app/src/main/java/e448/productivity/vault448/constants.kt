@@ -17,6 +17,8 @@ import androidx.compose.ui.unit.dp
 import e448.productivity.vault448.ui.theme.Typography
 
 
+val padding12 = 12.dp
+val padding10 = 10.dp
 val padding14 = 14.dp
 val padding16 = 16.dp
 val padding20 = 20.dp

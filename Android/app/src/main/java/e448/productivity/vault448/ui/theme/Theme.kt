@@ -16,16 +16,16 @@ import androidx.compose.ui.platform.LocalView
 import androidx.core.view.WindowCompat
 import androidx.compose.material3.darkColorScheme
 import androidx.compose.material3.lightColorScheme
+import androidx.compose.ui.graphics.Color
 
 private val DarkColorScheme = darkColorScheme(
     primary = v448ColorChineseBlack,
     secondary = v448ColorChineseBlack,
     tertiary = v448ColorWhite,
 
-    background = v448ColorSmokyBlack,
-    surface = v448ColorChineseBlack,
+    surface = v448ColorEerieBlack,
+    background = v448ColorChineseBlack ,
     onPrimary = v448ColorWhite,
-    onSecondary = v448ColorSmokyBlack,
     onTertiary = v448ColorChineseBlack,
     onBackground = v448ColorWhite,
     onSurface = v448ColorWhite,

@@ -22,3 +22,5 @@ once_cell.workspace = true
 human_format.workspace = true
 dir-meta.workspace = true
 camino.workspace = true
+smol.workspace = true
+async-dup.workspace = true

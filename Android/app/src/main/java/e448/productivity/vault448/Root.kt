@@ -7,6 +7,8 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.Text
@@ -19,6 +21,10 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.unit.dp
+import e448.productivity.vault448.fileManager.FilesCalc
+import e448.productivity.vault448.fileManager.InternalStorageCalc
+import e448.productivity.vault448.fileManager.InternalStorageOverview
 import e448.productivity.vault448.ui.theme.Typography
 
 
@@ -27,16 +33,37 @@ fun RootUI(nativeClass: Vault448Native) {
     val isSheetOpen = rememberSaveable {
         mutableStateOf(false)
     }
+    val scrollState = rememberScrollState()
 
-    CenteredColumn {
-        RootModalBottomSheet(isSheetOpen, nativeClass)
-        CenteredRow{
-            Text("FILE  MANAGER", style = Typography.bodyLarge,
-                modifier = Modifier.clickable {
-                isSheetOpen.value = true
-            })
+    Column(
+        modifier = Modifier.verticalScroll(state = scrollState)
+    ) {
+        CenteredColumn {
+            RootModalBottomSheet(isSheetOpen, nativeClass)
+            CenteredRow {
+                Text(
+                    "FILE  MANAGER",
+                    style = Typography.titleMedium,
+                    modifier = Modifier.clickable {
+                        isSheetOpen.value = true
+                    })
+            }
+            Row(
+                modifier = Modifier.padding(padding10),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                InternalStorageOverview(
+                    Modifier.weight(3f),
+                )
+                CustomSpacer(10.dp)
+                Column(modifier = Modifier.weight(1f)) {
+                    InternalStorageCalc()
+                    CustomSpacer(dp = 1.dp, bottom = 10.dp)
+                    FilesCalc()
+                }
+
+            }
         }
-
     }
 }
 
@@ -49,7 +76,6 @@ fun RootModalBottomSheet(isSheetOpen: MutableState<Boolean>, nativeClass: Vault4
     val versionName = packageInfo.versionName
 
     val ffiVersion = ffiVersion()
-
 
     if (isSheetOpen.value) {
         ModalBottomSheet(
@@ -72,11 +98,13 @@ fun RootModalBottomSheet(isSheetOpen: MutableState<Boolean>, nativeClass: Vault4
                     )
                 }
 
-                Text("APP VERSION: $versionName", style = Typography.labelSmall)
-                Text( "FFI VERSION: $ffiVersion", style = Typography.labelSmall)
+                Text("App Version: $versionName", style = Typography.labelLarge)
+                Text("FFI Version: $ffiVersion", style = Typography.labelLarge)
 
             }
         }
     }
 }
+
+
 
