@@ -63,6 +63,11 @@ fun RootUI(nativeClass: Vault448Native) {
                 }
 
             }
+            CenteredColumn(
+            ) {
+                DataSection()
+                MediaSection()
+            }
         }
     }
 }

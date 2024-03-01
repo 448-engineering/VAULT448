@@ -21,7 +21,7 @@ import androidx.compose.ui.graphics.Color
 private val DarkColorScheme = darkColorScheme(
     primary = v448ColorChineseBlack,
     secondary = v448ColorChineseBlack,
-    tertiary = v448ColorWhite,
+    tertiary = v448ColorDeepRuby,
 
     surface = v448ColorEerieBlack,
     background = v448ColorChineseBlack ,
